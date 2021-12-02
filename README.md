@@ -24,7 +24,7 @@ In addition, this project will include:
 - a production README
 
 ## Wireframes
-![Wireframe](https://wireframe.cc/lmPP3V)
+<img width="1026" alt="Screen Shot 2021-12-02 at 5 40 17 PM" src="https://user-images.githubusercontent.com/68402088/144514738-dad393bd-e807-4a6e-bd12-205050c9b401.png">
 ## Technologies
 - Javascript
 - HTML
