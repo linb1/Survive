@@ -6,7 +6,7 @@ Stuck in a room with no where else to go, defend against waves of enemies
 for as long as you can! The longer you live, the stronger your enemies get, so don't
 let them catch you!
 
-# Functionality and MVPs
+## Functionality and MVPs
 
 In Survive!, players will:
 - move their character with the left, right, up, and down arrow keys
@@ -23,21 +23,21 @@ In addition, this project will include:
 - instructions describing the background and rules of the game
 - a production README
 
-# Wireframes
-
-# Technologies
+## Wireframes
+![Wireframe](https://wireframe.cc/lmPP3V)
+## Technologies
 - Javascript
 - HTML
 - CSS
 - Canvas
 - Webpack
 
-# Implementation Timeline
+## Implementation Timeline
 - Creating base for game (2days): initial map layout, player functions
 - Creating enemies (1 day): enemy logic for chasing player
 - Creating game logic(1-2 days): object interactions, game logic
 - Finishing up (1-2 days): animations, graphics, bonus
 
-# Bonus Features
+## Bonus Features
 - background music
 - additional game features: upgrading weapons, unique enemies
