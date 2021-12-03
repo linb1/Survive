@@ -26,6 +26,13 @@ In addition, this project will include:
 ## Wireframes
 <img width="1026" alt="Screen Shot 2021-12-02 at 5 40 17 PM" src="https://user-images.githubusercontent.com/68402088/144514738-dad393bd-e807-4a6e-bd12-205050c9b401.png">
 
+- Nav links includes links to this project's Github repo and my LinkedIn
+- Controls will include the controls in order to play the game (i.e arrow keys to move)
+- Instructions will include background and rules for the game
+- Scoreboard will have the player's highest score per session
+- the Options will give the user the ability to mute the game sounds or pause the game
+- the center will contain the game screen, where users can see their score, health, and wave number.
+
 ## Technologies
 - Javascript
 - HTML
@@ -34,11 +41,14 @@ In addition, this project will include:
 - Webpack
 
 ## Implementation Timeline
-- Creating base for game (2days): initial map layout, player functions
-- Creating enemies (1 day): enemy logic for chasing player
-- Creating game logic(1-2 days): object interactions, game logic
-- Finishing up (1-2 days): animations, graphics, bonus
+- Friday: Creating base for the game, setting up game architecture, creating window layout, overall getting things to render onto the screen and getting comfortable with technologies
+- Saturday: Creating classes for board and player, making sure they render on the screen
+- Sunday: Creating projectiles, map, enemies, and implementing collision detection for player/enemies
+- Monday: Create game logic, implement enemy AI to follow player
+- Tuesday: Finish up on useer control, anything game related, and working on styling, such as adding animation and sprites
+- Wednesday: Finish styling the game, adding nav links, and any bonus features if possible
+
 
 ## Bonus Features
-- background music
-- additional game features: upgrading weapons, unique enemies
+- Background music
+- Additional game features: upgrading weapons, unique enemies
