@@ -9,19 +9,19 @@ let them catch you!
 ## Functionality and MVPs
 
 In Survive!, players will:
-- move their character with the left, right, up, and down arrow keys
-- shoot with spacebar to damage enemies
-- lose once their character runs out of health
-- be able to pause the game at any time
+- Move their character with the left, right, up, and down arrow keys
+- Shoot with spacebar to damage enemies
+- Lose once their character runs out of health
+- Be able to pause the game at any time
 
 The enemies will:
-- follow the player until they are destroyed
-- gain more health and damage as the game goes on
-- spawn in larger numbers each wave
+- Follow the player until they are destroyed
+- Gain more health and damage as the game goes on
+- Spawn in larger numbers each wave
 
 In addition, this project will include:
-- instructions describing the background and rules of the game
-- a production README
+- Instructions describing the background and rules of the game
+- A production README
 
 ## Wireframes
 <img width="1026" alt="Screen Shot 2021-12-02 at 5 40 17 PM" src="https://user-images.githubusercontent.com/68402088/144514738-dad393bd-e807-4a6e-bd12-205050c9b401.png">
