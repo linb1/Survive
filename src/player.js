@@ -12,8 +12,8 @@ export default class Player {
         this.speedY = 0;
         this.maxSpeed = 7;
     }
-
-    moveLeft(){
+    //move player
+    moveLeft() {
         this.speedX = -this.maxSpeed;
     }
     moveRight() {
@@ -25,6 +25,13 @@ export default class Player {
     moveDown() {
         this.speedY = this.maxSpeed;
     }
+    //stop player
+    stopX() {
+        this.speedX = 0;
+    }
+    stopY() {
+        this.speedY = 0;
+    }
     //draw go to a different class later
     draw(ctx){
         ctx.beginPath();
@@ -33,10 +40,11 @@ export default class Player {
         ctx.fill();
     }
 
-    update(deltaTime){
-        if(!deltaTime) return;
-        this.position.x += this.speedX;
+    update(deltaTime){ // deltatime - how much time has pass since last update
+        if(!deltaTime) return; //if no deltatime, just return
+        this.position.x += this.speedX; // moves per frame
         this.position.y += this.speedY;
+        //checks if player hits edge of map
         if((this.position.x - this.radius) < 0){
             this.position.x = this.radius;
         }
