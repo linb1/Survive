@@ -33,6 +33,26 @@ export default class Player {
         this.direction = "faceDown";
         this.speedY = this.maxSpeed;
     }
+    moveDiagonalLeftUp(){
+        this.direction = "faceLeftUp"
+        this.speedX = -this.maxSpeed;
+        this.speedY = -this.maxSpeed;
+    }
+    moveDiagonalLeftDown() {
+        this.direction = "faceLeftDown"
+        this.speedX = -this.maxSpeed;
+        this.speedY = this.maxSpeed;
+    }
+    moveDiagonalRightUp() {
+        this.direction = "faceRightUp"
+        this.speedX = this.maxSpeed;
+        this.speedY = -this.maxSpeed;
+    }
+    moveDiagonalRightDown() {
+        this.direction = "faceRightDown"
+        this.speedX = this.maxSpeed;
+        this.speedY = this.maxSpeed;
+    }
     //stop player
     stopX() {
         this.speedX = 0;
@@ -54,6 +74,18 @@ export default class Player {
                 break;
             case "faceDown":
                 return { x: 0, y: 15 };
+                break;
+            case "faceLeftUp":
+                return { x: -15, y: -15 };
+                break;
+            case "faceLeftDown":
+                return { x: -15, y: 15};
+                break;
+            case "faceRightUp":
+                return { x: 15, y: -15 };
+                break;
+            case "faceRightDown":
+                return { x: 15, y: 15 };
                 break;
         }
     }

@@ -2,24 +2,59 @@ import Game from './game';
 export default class InputHandler{
     constructor(game) {
         // moves game.player when key down
+        this.inputs = {};
         document.addEventListener('keydown', (event) =>{
-            console.log(event.key)
+            if (!this.inputs[event.key]){
+                this.inputs[event.key] = false;
+            }
+
+            //log inputs
             switch (event.key){
+                case " ":
+                    this.inputs[event.key] = true;
+                    break;
                 case "ArrowLeft":
-                    game.player.moveLeft();
+                    this.inputs[event.key] = true;
                     break;
                 case "ArrowRight":
-                    game.player.moveRight();
+                    this.inputs[event.key] = true;
                     break;
                 case "ArrowUp":
-                    game.player.moveUp();
+                    this.inputs[event.key] = true;
                     break;
                 case "ArrowDown":
-                    game.player.moveDown();
+                    this.inputs[event.key] = true;
                     break;
-                case " ":
-                    game.player.shoot();
-                    break;
+            }
+            let keys = Object.keys(this.inputs).filter(pressed => this.inputs[pressed]) 
+            console.log(keys)
+            if (keys.includes("ArrowLeft") && keys.includes("ArrowUp")) {
+                game.player.moveDiagonalLeftUp();
+
+            } else if (keys.includes("ArrowLeft") && keys.includes("ArrowDown")) {
+                game.player.moveDiagonalLeftDown();
+
+            } else if (keys.includes("ArrowRight") && keys.includes("ArrowUp")) {
+                game.player.moveDiagonalRightUp();
+
+            } else if (keys.includes("ArrowRight") && keys.includes("ArrowDown")) {
+                game.player.moveDiagonalRightDown();
+
+            } else if (keys.includes("ArrowLeft")){
+                game.player.moveLeft();
+
+            } else if (keys.includes("ArrowRight")){
+                game.player.moveRight();
+
+            } else if (keys.includes("ArrowUp")) {
+                game.player.moveUp();
+
+            } else if (keys.includes("ArrowDown")) {
+                game.player.moveDown();
+
+            } 
+            if (keys.includes(" ")) {
+                game.player.shoot();
             }
         });
         // stops player when key up
@@ -28,28 +63,32 @@ export default class InputHandler{
         document.addEventListener('keyup', (event) => {
             switch (event.key) {
                 case "ArrowLeft":
+                    this.inputs[event.key] = false;
                     if(game.player.speedX < 0){
                         game.player.stopX();
                     }
                     break;
                 case "ArrowRight":
+                    this.inputs[event.key] = false;
                     if (game.player.speedX > 0) {
                         game.player.stopX();
                     }
                     break;
                 case "ArrowUp":
+                    this.inputs[event.key] = false;
                     if(game.player.speedY < 0){
                         game.player.stopY();
                     }
                     break;
                 case "ArrowDown":
+                    this.inputs[event.key] = false;
                     if(game.player.speedY > 0){
                         game.player.stopY();
                     }
                     break;
-                // case " ":
-                //     alert("shoot");
-                //     break;
+                case " ":
+                    this.inputs[event.key] = false;
+                    break;
             }
         });
     }
