@@ -1,3 +1,4 @@
+
 export default class InputHandler{
     constructor(player) {
         // moves player when key down
@@ -16,7 +17,10 @@ export default class InputHandler{
                     player.moveDown();
                     break;
                 case " ":
-                    alert("shoot");
+                    player.shoot();
+                    // alert("hi");
+                    // let projectile = new Projectile(player.position)
+                    // projectile.draw()
                     break;
             }
         });

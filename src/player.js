@@ -1,3 +1,5 @@
+import Projectile from "./projectile";
+
 export default class Player {
     constructor(game) {
         this.gameWidth = game.gameWidth;
@@ -31,6 +33,10 @@ export default class Player {
     }
     stopY() {
         this.speedY = 0;
+    }
+
+    shoot() {
+        let projectile = new Projectile(this.position);
     }
     //draw go to a different class later
     draw(ctx){

@@ -1,32 +1,31 @@
 import Player from '/src/player.js';
-import InputHandler from '/src/input.js';
+import Projectile from './projectile';
 
 
 export default class Game {
     constructor(gameWidth, gameHeight){
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
+        this.player = new Player(this)
+        this.projectiles = [];
     }
 
-    start() {
-        //creates a player to be renders
-        this.player = new Player(this)
-        // created input handler to read keyboard inputs
-        new InputHandler(this.player);
-        //refactor -> place objects in array so don't have to hardcode each object
-        this.gameObjects = [
-            this.player
-        ]
+    addProjectile() {
+        this.projectiles.push(new Projectile(this.player.position))
+    }
+
+    gameObjects() {
+        return [].concat(this.player, this.projectiles)
     }
 
     update(deltaTime){
-        this.gameObjects.forEach((object) => {
+        this.gameObjects().forEach((object) => {
             object.update(deltaTime)
         })
     }
 
     draw(ctx){
-        this.gameObjects.forEach((object) => {
+        this.gameObjects().forEach((object) => {
             object.draw(ctx)
         })
     }
