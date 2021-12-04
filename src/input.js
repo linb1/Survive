@@ -1,26 +1,24 @@
-
+import Game from './game';
 export default class InputHandler{
-    constructor(player) {
-        // moves player when key down
+    constructor(game) {
+        // moves game.player when key down
         document.addEventListener('keydown', (event) =>{
+            console.log(event.key)
             switch (event.key){
                 case "ArrowLeft":
-                    player.moveLeft();
+                    game.player.moveLeft();
                     break;
                 case "ArrowRight":
-                    player.moveRight();
+                    game.player.moveRight();
                     break;
                 case "ArrowUp":
-                    player.moveUp();
+                    game.player.moveUp();
                     break;
                 case "ArrowDown":
-                    player.moveDown();
+                    game.player.moveDown();
                     break;
                 case " ":
-                    player.shoot();
-                    // alert("hi");
-                    // let projectile = new Projectile(player.position)
-                    // projectile.draw()
+                    game.player.shoot();
                     break;
             }
         });
@@ -30,28 +28,28 @@ export default class InputHandler{
         document.addEventListener('keyup', (event) => {
             switch (event.key) {
                 case "ArrowLeft":
-                    if(player.speedX < 0){
-                        player.stopX();
+                    if(game.player.speedX < 0){
+                        game.player.stopX();
                     }
                     break;
                 case "ArrowRight":
-                    if (player.speedX > 0) {
-                        player.stopX();
+                    if (game.player.speedX > 0) {
+                        game.player.stopX();
                     }
                     break;
                 case "ArrowUp":
-                    if(player.speedY < 0){
-                        player.stopY();
+                    if(game.player.speedY < 0){
+                        game.player.stopY();
                     }
                     break;
                 case "ArrowDown":
-                    if(player.speedY > 0){
-                        player.stopY();
+                    if(game.player.speedY > 0){
+                        game.player.stopY();
                     }
                     break;
-                case " ":
-                    alert("shoot");
-                    break;
+                // case " ":
+                //     alert("shoot");
+                //     break;
             }
         });
     }

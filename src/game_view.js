@@ -8,7 +8,7 @@ export default class GameView{
     }
 
     start(){
-        new InputHandler(this.game.player);
+        new InputHandler(this.game);
         this.lastTime = 0; // when game created, starts at 0
         requestAnimationFrame(this.animate.bind(this))
     }

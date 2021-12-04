@@ -10,8 +10,8 @@ export default class Game {
         this.projectiles = [];
     }
 
-    addProjectile() {
-        this.projectiles.push(new Projectile(this.player.position))
+    addProjectile(projectile) {
+        this.projectiles.push(projectile);
     }
 
     gameObjects() {

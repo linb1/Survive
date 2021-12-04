@@ -2,6 +2,7 @@ import Projectile from "./projectile";
 
 export default class Player {
     constructor(game) {
+        this.game = game;
         this.gameWidth = game.gameWidth;
         this.gameHeight = game.gameHeight;
         this.radius = 20;
@@ -13,18 +14,23 @@ export default class Player {
         this.speedX = 0;
         this.speedY = 0;
         this.maxSpeed = 7;
+        this.direction = "faceDown";
     }
     //move player
     moveLeft() {
+        this.direction = "faceLeft";
         this.speedX = -this.maxSpeed;
     }
     moveRight() {
+        this.direction = "faceRight";
         this.speedX = this.maxSpeed;
     }
     moveUp() {
+        this.direction = "faceUp";
         this.speedY = -this.maxSpeed;
     }
     moveDown() {
+        this.direction = "faceDown";
         this.speedY = this.maxSpeed;
     }
     //stop player
@@ -35,8 +41,29 @@ export default class Player {
         this.speedY = 0;
     }
 
+    getProjectileVelocity(){
+        switch (this.direction) {
+            case "faceLeft":
+                return {x: -15, y: 0};
+                break;
+            case "faceRight":
+                return { x: 15, y: 0 };
+                break;
+            case "faceUp":
+                return { x: 0, y: -15 };
+                break;
+            case "faceDown":
+                return { x: 0, y: 15 };
+                break;
+        }
+    }
+
     shoot() {
-        let projectile = new Projectile(this.position);
+        let x = this.position.x; // get snapshot of player position (passing in this.position makes bullet follow player)
+        let y = this.position.y;
+        let velocity = this.getProjectileVelocity();
+        let projectile = new Projectile({x ,y}, velocity);
+        this.game.addProjectile(projectile);
     }
     //draw go to a different class later
     draw(ctx){
