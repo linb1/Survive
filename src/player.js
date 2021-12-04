@@ -1,11 +1,11 @@
 export default class Player {
-    constructor(gameWidth, gameHeight) {
-        this.gameWidth = gameWidth;
-        this.gameHeight = gameHeight;
+    constructor(game) {
+        this.gameWidth = game.gameWidth;
+        this.gameHeight = game.gameHeight;
         this.radius = 20;
         this.position = {
-            x: (gameWidth/2) - (this.radius/2),
-            y: (gameHeight/2) - (this.radius/2)
+            x: (game.gameWidth/2) - (this.radius/2),
+            y: (game.gameHeight/2) - (this.radius/2)
         }
         this.color = "green";
         this.speedX = 0;
