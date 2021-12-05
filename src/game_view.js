@@ -1,5 +1,4 @@
 import InputHandler from '/src/input.js';
-
 export default class GameView{
 
     constructor(context, game){

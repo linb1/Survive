@@ -1,13 +1,15 @@
 import Player from '/src/player.js';
 import Projectile from './projectile';
 import Enemy from './enemy';
+import Map from './map';
 
 
 export default class Game {
     constructor(gameWidth, gameHeight){
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
-        this.player = new Player(this)
+        this.map = new Map();
+        this.player = new Player(this);
         this.projectiles = [];
         this.enemies = [];
     }
@@ -40,6 +42,22 @@ export default class Game {
         this.spawnEnemiesTop();
         this.spawnEnemiesBottom();
     }
+
+    removeEnemy(){
+        this.enemies.forEach((enemy, enemyIndex) => {
+            this.projectiles.forEach((projectile, projectileIndex) => {
+                let distance = Math.hypot(projectile.position.x - enemy.position.x, projectile.position.y - enemy.position.y);
+                if (distance - enemy.radius - projectile.radius < 0.5){
+                    this.enemies.splice(enemyIndex, 1);
+                    this.projectiles.splice(projectileIndex, 1);
+                }
+                
+            })
+        })
+    }
+
+    
+
     gameObjects() {
         return [].concat(this.player, this.projectiles, this.enemies)
     }
@@ -47,10 +65,12 @@ export default class Game {
     update(deltaTime){
         this.gameObjects().forEach((object) => {
             object.update(deltaTime)
+            this.removeEnemy();
         })
     }
 
     draw(ctx){
+        this.map.draw(ctx);
         this.gameObjects().forEach((object) => {
             object.draw(ctx)
         })
