@@ -52,7 +52,7 @@ export default class InputHandler{
             } else if (keys.includes("ArrowDown")) {
                 game.player.moveDown();
 
-            } 
+            } // missing logic for if player uses 2 opposite directions (prioritizes left and up right now)
             if (keys.includes(" ")) {
                 game.player.shoot();
             }

@@ -16,6 +16,7 @@ export default class CollisionHandler{
         this.oldBottomOfObject = this.gameObject.prevPosition.y + this.gameObject.height;
     }
 
+    
     collision(value, gameObject, row, column) {
         switch(value){
             case 1:
@@ -43,10 +44,8 @@ export default class CollisionHandler{
                 if (this.topOfObject < bottom && this.oldTopOfObject >= bottom) {
                     gameObject.speedY = 0;
                     gameObject.prevPosition.y = gameObject.position.y = bottom;
-                    return true
                 }
             }
-        return false
     }
 
     rightCollision(gameObject, column) {
@@ -99,6 +98,7 @@ export default class CollisionHandler{
         let topRow = Math.floor(this.topOfObject/this.map.tileSize);
         let rightColumn = Math.floor(this.rightOfObject/this.map.tileSize);
         // debugger;
+
         if((this.gameObject.position.x - this.gameObject.prevPosition.x) < 0) { //test collision of left side of object if moving left
             //checking bottom left corner
             let value_of_tile_bottom = this.collisionMap[bottomRow][leftColumn];

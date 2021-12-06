@@ -1,5 +1,5 @@
 import Projectile from "./projectile";
-
+import CollisionHandler from './collisionHandler';
 export default class Player {
     constructor(game) {
         this.game = game;
@@ -18,7 +18,7 @@ export default class Player {
         this.color = "green";
         this.speedX = 0;
         this.speedY = 0;
-        this.maxSpeed = 7;
+        this.maxSpeed = 5;
         this.direction = "faceDown";
     }
     //move player
@@ -115,26 +115,26 @@ export default class Player {
         //set prev position to current position
         this.prevPosition.x = this.position.x;
         this.prevPosition.y = this.position.y;
-
+        //check collision here?
         //update current position
         this.position.x += this.speedX; // moves per frame
         this.position.y += this.speedY;
         //checks if player hits edge of map
-        if((this.position.x) < 0){
-            this.position.x = 0;
-            this.prevPosition.x = 0
-        }
-        if((this.position.x + this.width) > this.gameWidth){
-            this.position.x = this.gameWidth - this.width;
-            this.prevPosition.x = this.gameWidth - this.width;
-        }
-        if ((this.position.y) < 0) {
-            this.position.y = 0;
-            this.prevPosition.y = 0;
-        }
-        if ((this.position.y + this.height) > this.gameHeight) {
-            this.position.y = this.gameHeight - this.height;
-            this.prevPosition.y = this.gameHeight - this.height;
-        }
+        // if((this.position.x) < 0){
+        //     this.position.x = 0;
+        //     this.prevPosition.x = 0
+        // }
+        // if((this.position.x + this.width) > this.gameWidth){
+        //     this.position.x = this.gameWidth - this.width;
+        //     this.prevPosition.x = this.gameWidth - this.width;
+        // }
+        // if ((this.position.y) < 0) {
+        //     this.position.y = 0;
+        //     this.prevPosition.y = 0;
+        // }
+        // if ((this.position.y + this.height) > this.gameHeight) {
+        //     this.position.y = this.gameHeight - this.height;
+        //     this.prevPosition.y = this.gameHeight - this.height;
+        // }
     }
 }
