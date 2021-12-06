@@ -100,6 +100,15 @@ export default class Game {
 
     }
 
+    // 1 = ceiling (bottom collision)
+    // 2 = left wall (right-side collision)
+    // 3 = right wall (left-side collision)
+    // 4 = floor (top collision)
+    // 5 = block (all-sides collision)
+    // 6 = left-top collision
+    // 7 = right-top collision
+    // 8 = left-bottom collision
+    // 9 = right-bottom collision
     collision(value, player, tile_row, tile_column) {
         // console.log(value)
         switch (value) {
@@ -121,6 +130,22 @@ export default class Game {
                 if (this.leftCollision(player, tile_column)) { return }
                 this.rightCollision(player,tile_column)
                 break;
+            case 6:
+                if (this.topCollision(player, tile_row)) { return }
+                if (this.leftCollision(player, tile_column)) { return }
+                break;
+            case 7:
+                if (this.topCollision(player, tile_row)) { return }
+                if (this.rightCollision(player, tile_column)) { return }
+                break;
+            case 8:
+                if (this.bottomCollision(player, tile_row)) { return }
+                if (this.leftCollision(player, tile_column)) { return }
+                break;
+            case 9:
+                if (this.bottomCollision(player, tile_row)) { return }
+                if (this.rightCollision(player, tile_column)) { return }
+                break;
         }
     }
 
@@ -136,7 +161,8 @@ export default class Game {
             //checks if object is entering collision boundary
             if (rightOfPlayer > left && prevRightOfPlayer <= left) {
                 player.speedX = 0;
-                player.prevPosition.x = player.position.x = left - player.width;
+                player.prevPosition.x = player.position.x = left - player.width - 0.01;
+                console.log("collided with left of tile");
                 return true
             }
         }
@@ -154,6 +180,7 @@ export default class Game {
             if (leftOfPlayer < right && prevLeftOfPlayer >= right) {
                 player.speedX = 0;
                 player.prevPosition.x = player.position.x = right;
+                console.log("collided with right of tile");
                 return true
             }
         }
@@ -161,15 +188,16 @@ export default class Game {
     }
     
     topCollision(player, tile_top){
-        // console.log(tile_top);
         let bottomOfPlayer = player.position.y + player.height;
         let prevBottomOfPlayer = player.prevPosition.y + player.height;
         if ((player.position.y - player.prevPosition.y) > 0) {
             let top = tile_top * this.map.tileSize;
-
+            
             if (bottomOfPlayer > top && prevBottomOfPlayer <= top) {
                 player.speedY = 0;
-                player.prevPosition.y = player.position.y = top - player.height;
+                player.prevPosition.y = player.position.y = top - player.height - 0.01;
+                // debugger;
+                console.log("collided with top of tile");
                 return true
             }
         }
@@ -182,10 +210,10 @@ export default class Game {
         let prevTopOfPlayer = player.prevPosition.y;
         if ((player.position.y - player.prevPosition.y) < 0) {
             let bottom = (tile_bottom + 1) * this.map.tileSize;
-
             if (topOfPlayer < bottom && prevTopOfPlayer >= bottom) {
                 player.speedY = 0;
                 player.prevPosition.y = player.position.y = bottom;
+                console.log("collided with bottom of tile");
                 return true
             }
         }
@@ -193,12 +221,15 @@ export default class Game {
     }
 
     update(deltaTime){
+        // this.player.update(deltaTime);
         this.gameObjects().forEach((object) => {
             object.update(deltaTime)
             this.removeEnemy();
+            this.checkForCollision(this.player);
         })
         this.borderCollision(this.player);
-        this.checkForCollision(this.player);
+        // console.log(this.player.speedX)
+        // console.log(this.player.speedY)
     }
 
     draw(ctx){

@@ -40,23 +40,25 @@ export default class Player {
     }
     moveDiagonalLeftUp(){
         this.direction = "faceLeftUp"
-        this.speedX = -this.maxSpeed;
-        this.speedY = -this.maxSpeed;
+        
+        // this.speedX = -this.maxSpeed;
+        // this.speedY = -this.maxSpeed;
     }
     moveDiagonalLeftDown() {
         this.direction = "faceLeftDown"
-        this.speedX = -this.maxSpeed;
-        this.speedY = this.maxSpeed;
+        // this.speedX = -this.maxSpeed;
+        // this.speedY = this.maxSpeed;
     }
     moveDiagonalRightUp() {
         this.direction = "faceRightUp"
-        this.speedX = this.maxSpeed;
-        this.speedY = -this.maxSpeed;
+        // this.speedX = this.maxSpeed;
+        // this.speedY = -this.maxSpeed;
     }
     moveDiagonalRightDown() {
         this.direction = "faceRightDown"
-        this.speedX = this.maxSpeed;
-        this.speedY = this.maxSpeed;
+        console.log("down-right")
+        // this.speedX = this.maxSpeed;
+        // this.speedY = this.maxSpeed;
     }
     //stop player
     stopX() {
@@ -96,10 +98,14 @@ export default class Player {
     }
 
     shoot() {
-        let x = this.position.x; // get snapshot of player position (passing in this.position makes bullet follow player)
+        let x = this.position.x; //top // get snapshot of player position (passing in this.position makes bullet follow player)
         let y = this.position.y;
+
+        // xy == bottom
         let velocity = this.getProjectileVelocity();
         let projectile = new Projectile({x ,y}, velocity);
+        // project1 = xy
+        //pro 2 =x2y2
         this.game.addProjectile(projectile);
     }
     //draw go to a different class later
@@ -113,6 +119,7 @@ export default class Player {
     update(deltaTime){ // deltatime - how much time has pass since last update
         if(!deltaTime) return; //if no deltatime, just return
         //set prev position to current position
+        // console.log("update")
         this.prevPosition.x = this.position.x;
         this.prevPosition.y = this.position.y;
         //check collision here?
