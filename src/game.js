@@ -1,7 +1,7 @@
 import Player from '/src/player.js';
-import Projectile from './projectile';
 import Enemy from './enemy';
 import Map from './map';
+import CollisionHandler from './collisionHandler';
 
 
 export default class Game {
@@ -56,6 +56,7 @@ export default class Game {
         })
     }
 
+
     
 
     gameObjects() {
@@ -63,6 +64,8 @@ export default class Game {
     }
 
     update(deltaTime){
+        let collisionHandler = new CollisionHandler(this.map, this.player)
+        collisionHandler.checkForCollision();
         this.gameObjects().forEach((object) => {
             object.update(deltaTime)
             this.removeEnemy();

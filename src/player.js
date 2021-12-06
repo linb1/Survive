@@ -5,10 +5,15 @@ export default class Player {
         this.game = game;
         this.gameWidth = game.gameWidth;
         this.gameHeight = game.gameHeight;
-        this.radius = 20;
+        this.width = 15;
+        this.height = 30;
         this.position = {
-            x: (game.gameWidth/2) - (this.radius/2),
-            y: (game.gameHeight/2) - (this.radius/2)
+            x: (game.gameWidth/2) - (this.width/2),
+            y: (game.gameHeight/2) - (this.height/2)
+        }
+        this.prevPosition = {
+            x: (game.gameWidth / 2) - (this.width / 2),
+            y: (game.gameHeight / 2) - (this.height / 2)
         }
         this.color = "green";
         this.speedX = 0;
@@ -100,27 +105,36 @@ export default class Player {
     //draw go to a different class later
     draw(ctx){
         ctx.beginPath();
-        ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI*2, false);
+        ctx.rect(this.position.x, this.position.y, this.width, this.height);
         ctx.fillStyle = this.color;
         ctx.fill();
     }
 
     update(deltaTime){ // deltatime - how much time has pass since last update
         if(!deltaTime) return; //if no deltatime, just return
+        //set prev position to current position
+        this.prevPosition.x = this.position.x;
+        this.prevPosition.y = this.position.y;
+
+        //update current position
         this.position.x += this.speedX; // moves per frame
         this.position.y += this.speedY;
         //checks if player hits edge of map
-        if((this.position.x - this.radius) < 0){
-            this.position.x = this.radius;
+        if((this.position.x) < 0){
+            this.position.x = 0;
+            this.prevPosition.x = 0
         }
-        if((this.position.x + this.radius) > this.gameWidth){
-            this.position.x = this.gameWidth - this.radius;
+        if((this.position.x + this.width) > this.gameWidth){
+            this.position.x = this.gameWidth - this.width;
+            this.prevPosition.x = this.gameWidth - this.width;
         }
-        if ((this.position.y - this.radius) < 0) {
-            this.position.y = this.radius;
+        if ((this.position.y) < 0) {
+            this.position.y = 0;
+            this.prevPosition.y = 0;
         }
-        if ((this.position.y + this.radius) > this.gameHeight) {
-            this.position.y = this.gameHeight - this.radius;
+        if ((this.position.y + this.height) > this.gameHeight) {
+            this.position.y = this.gameHeight - this.height;
+            this.prevPosition.y = this.gameHeight - this.height;
         }
     }
 }
