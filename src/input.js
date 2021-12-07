@@ -45,7 +45,7 @@ export default class InputHandler{
                 game.player.moveLeft();
                 game.player.moveUp();
                 game.player.moveDiagonalLeftUp();
-                
+
             } else if (keys.includes("ArrowLeft") && keys.includes("ArrowDown")) {
                 game.player.moveLeft();
                 game.player.moveDown();
@@ -97,25 +97,25 @@ export default class InputHandler{
             switch (event.key) {
                 case "ArrowLeft":
                     this.inputs[event.key].pressed = false;
-                    if(game.player.speedX < 0){
+                    if(game.player.velocity.x < 0){
                         game.player.stopX();
                     }
                     break;
                 case "ArrowRight":
                     this.inputs[event.key].pressed = false;
-                    if (game.player.speedX > 0) {
+                    if (game.player.velocity.x > 0) {
                         game.player.stopX();
                     }
                     break;
                 case "ArrowUp":
                     this.inputs[event.key].pressed = false;
-                    if(game.player.speedY < 0){
+                    if(game.player.velocity.y < 0){
                         game.player.stopY();
                     }
                     break;
                 case "ArrowDown":
                     this.inputs[event.key].pressed = false;
-                    if(game.player.speedY > 0){
+                    if(game.player.velocity.y > 0){
                         game.player.stopY();
                     }
                     break;

@@ -1,6 +1,7 @@
 export default class Enemy {
-    constructor(position) {
+    constructor(position, prevPosition) {
         this.position = position;
+        this.prevPosition = prevPosition;
         this.imgSize = 64;
         this.width = 54;
         this.height = 54;
@@ -34,19 +35,19 @@ export default class Enemy {
     }
 
     draw(ctx) {
-        ctx.drawImage(
-            this.skeleton,
-            10,
-            10,
-            54,
-            54,
-            this.position.x,
-            this.position.y,
-            this.width,
-            this.height
-        )
-        // ctx.fillStyle = this.color;
-        // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        // ctx.drawImage(
+        //     this.skeleton,
+        //     10,
+        //     10,
+        //     54,
+        //     54,
+        //     this.position.x,
+        //     this.position.y,
+        //     this.width,
+        //     this.height
+        // )
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         // ctx.beginPath();
         // ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
         // ctx.fillStyle = this.color;
@@ -54,6 +55,8 @@ export default class Enemy {
     }
 
     update(deltaTime) {
+        this.prevPosition.x = this.position.x;
+        this.prevPosition.y = this.position.y;
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
     }

@@ -20,13 +20,13 @@ export default class Game {
     }
 
     spawnEnemiesTop() {
-        setInterval(() => {
+        // setInterval(() => {
             let max = (this.gameWidth/2) + 75;
             let min = (this.gameWidth / 2) - 75;
             let spawnX = Math.random() * (max-min) + min;
             let spawnY = 0;
             this.enemies.push(new Enemy({ x: spawnX, y: spawnY }, { x: 1, y: 1 }))
-        }, 1000);
+        // }, 1000);
     }
 
     spawnEnemiesBottom(){
@@ -35,13 +35,14 @@ export default class Game {
             let min = (this.gameWidth / 2) - 75;
             let spawnX = Math.random() * (max - min) + min;
             let spawnY = this.gameHeight;
-            this.enemies.push(new Enemy({ x: spawnX, y: spawnY }))
+            let spawnPosition = {x: spawnX, y:spawnY }
+            this.enemies.push(new Enemy(spawnPosition, spawnPosition))
         }, 1000);
     }
 
     spawnEnemies(){
         this.spawnEnemiesTop();
-        this.spawnEnemiesBottom();
+        // this.spawnEnemiesBottom();
     }
 
     followPlayer(enemy){
@@ -52,8 +53,12 @@ export default class Game {
         let vectorY = distanceY / magnitude;
         enemy.velocity.x = vectorX * enemy.maxSpeed;
         enemy.velocity.y = vectorY * enemy.maxSpeed;
-        // enemy.position.x += (vectorX * enemy.maxSpeed);
-        // enemy.position.y += (vectorY * enemy.maxSpeed);
+        //check for collision
+        if ((magnitude - (enemy.width / 2) - (this.player.width / 2) < 0.2) ||
+            (magnitude - (enemy.width / 2) - (this.player.width / 2) < 0.2)) {
+            enemy.velocity.x = 0;
+            enemy.velocity.y = 0;
+        }
 
     }
 
@@ -85,22 +90,47 @@ export default class Game {
         return [].concat(this.player, this.projectiles, this.enemies)
     }
 
-    borderCollision(player) {
-        if ((player.position.x) < 0) {
-            player.speedX = 0;
-            player.position.x = 0;
-        }
-        if ((player.position.x + player.width) > this.gameWidth) {
-            player.speedX = 0;
-            player.position.x = this.gameWidth - player.width - 0.01; //detection issues when right/bottom sides are directly on the edge? breaks tile collision code if player happens to get through
-        }
-        if ((player.position.y) < 0) {
-            player.speedY = 0;
-            player.position.y = 0;
-        }
-        if ((player.position.y + player.height) > this.gameHeight) {
-            player.speedY = 0;
-            player.position.y = this.gameHeight - player.height - 0.01; //detection issues when right/bottom sides are directly on the edge? breaks tile collision code if player happens to get through
+    borderCollision(object) {
+        if (object instanceof Projectile) {
+            console.log("delete")
+            console.log("collided with border");
+            if ((object.position.x) < 0) {
+                object.position.x = 0.01;
+                object.delete = true;
+                this.removeProjectiles()
+            }
+            if ((object.position.x + object.width) > this.gameWidth) {
+                object.position.x = this.gameWidth - object.width - 0.01;
+                object.delete = true;
+                this.removeProjectiles()
+            }
+            if ((object.position.y) < 0) {
+                object.position.y = 0.01;
+                object.delete = true;
+                this.removeProjectiles()
+            }
+            if ((object.position.y + object.height) > this.gameHeight) {
+                object.position.y = this.gameHeight - object.height - 0.01;
+                object.delete = true;
+                this.removeProjectiles()
+            }
+        } else {
+            if ((object.position.x) < 0) {
+                object.velocity.x = 0;
+                object.position.x = 0.01;
+            }
+            if ((object.position.x + object.width) > this.gameWidth) {
+                object.velocity.x = 0;
+                object.position.x = this.gameWidth - object.width - 0.01; //detection issues when right/bottom sides are directly on the edge? breaks tile collision code if object happens to get through
+            }
+            if ((object.position.y) < 0) {
+                object.velocity.y = 0;
+                object.position.y = 0.01;
+            }
+            if ((object.position.y + object.height) > this.gameHeight) {
+                object.velocity.y = 0;
+                object.position.y = this.gameHeight - object.height - 0.01; //detection issues when right/bottom sides are directly on the edge? breaks tile collision code if player happens to get through
+            }
         }
     }
 
@@ -204,7 +234,7 @@ export default class Game {
     
                 //checks if object is entering collision boundary
                 if (rightOfobject > left && prevRightOfobject <= left) {
-                    // object.speedX = 0;
+                    // object.velocity.x = 0;
                     object.prevPosition.x = object.position.x = left - object.width - 0.01;
                     console.log("collided with left of tile");
                     return true
@@ -229,7 +259,7 @@ export default class Game {
     
                 //checks if object is entering collision boundary
                 if (leftOfobject < right && prevLeftOfobject >= right) {
-                    // object.speedX = 0;
+                    // object.velocity.x = 0;
                     object.prevPosition.x = object.position.x = right;
                     console.log("collided with right of tile");
                     return true
@@ -252,7 +282,7 @@ export default class Game {
                 let top = tile_top * this.map.tileSize;
                 
                 if (bottomOfobject > top && prevBottomOfobject <= top) {
-                    // object.speedY = 0;
+                    // object.velocity.y = 0;
                     object.prevPosition.y = object.position.y = top - object.height - 0.01;
                     // debugger;
                     console.log("collided with top of tile");
@@ -277,7 +307,7 @@ export default class Game {
             if ((object.position.y - object.prevPosition.y) < 0) {
                 let bottom = (tile_bottom + 1) * this.map.tileSize;
                 if (topOfobject < bottom && prevTopOfobject >= bottom) {
-                    // object.speedY = 0;
+                    // object.velocity.y = 0;
                     object.prevPosition.y = object.position.y = bottom;
                     console.log("collided with bottom of tile");
                     return true
@@ -297,19 +327,24 @@ export default class Game {
             // console.log(object)
             // console.log(object instanceof Player)
             if (object instanceof Player) {
+                this.borderCollision(object);
                 this.checkForCollision(object);
             }
             if (object instanceof Projectile) {
+                this.borderCollision(object);
                 this.checkForCollision(object);
             }
             if (object instanceof Enemy) {
                 this.followPlayer(object);
+                if (object.position.y > 1){
+                    this.borderCollision(object);
+                    this.checkForCollision(object);
+                }
             }
 
         })
-        this.borderCollision(this.player);
-        // console.log(this.player.speedX)
-        // console.log(this.player.speedY)
+        // console.log(this.player.velocity.x)
+        // console.log(this.player.velocity.y)
     }
 
     draw(ctx){

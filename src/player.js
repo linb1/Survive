@@ -18,6 +18,7 @@ export default class Player {
         this.color = "green";
         this.speedX = 0;
         this.speedY = 0;
+        this.velocity = { x:0, y:0 };
         this.maxSpeed = 5;
         this.direction = "faceDown";
         this.collisionX = false;
@@ -33,48 +34,48 @@ export default class Player {
     //move player
     moveLeft() {
         this.direction = "faceLeft";
-        this.speedX = -this.maxSpeed;
+        this.velocity.x = -this.maxSpeed;
     }
     moveRight() {
         this.direction = "faceRight";
-        this.speedX = this.maxSpeed;
+        this.velocity.x = this.maxSpeed;
     }
     moveUp() {
         this.direction = "faceUp";
-        this.speedY = -this.maxSpeed;
+        this.velocity.y = -this.maxSpeed;
     }
     moveDown() {
         this.direction = "faceDown";
-        this.speedY = this.maxSpeed;
+        this.velocity.y = this.maxSpeed;
     }
     moveDiagonalLeftUp(){
         this.direction = "faceLeftUp"
         
-        // this.speedX = -this.maxSpeed;
-        // this.speedY = -this.maxSpeed;
+        // this.velocity.x = -this.maxSpeed;
+        // this.velocity.y = -this.maxSpeed;
     }
     moveDiagonalLeftDown() {
         this.direction = "faceLeftDown"
-        // this.speedX = -this.maxSpeed;
-        // this.speedY = this.maxSpeed;
+        // this.velocity.x = -this.maxSpeed;
+        // this.velocity.y = this.maxSpeed;
     }
     moveDiagonalRightUp() {
         this.direction = "faceRightUp"
-        // this.speedX = this.maxSpeed;
-        // this.speedY = -this.maxSpeed;
+        // this.velocity.x = this.maxSpeed;
+        // this.velocity.y = -this.maxSpeed;
     }
     moveDiagonalRightDown() {
         this.direction = "faceRightDown"
         console.log("down-right")
-        // this.speedX = this.maxSpeed;
-        // this.speedY = this.maxSpeed;
+        // this.velocity.x = this.maxSpeed;
+        // this.velocity.y = this.maxSpeed;
     }
     //stop player
     stopX() {
-        this.speedX = 0;
+        this.velocity.x = 0;
     }
     stopY() {
-        this.speedY = 0;
+        this.velocity.y = 0;
     }
 
     getProjectileVelocity(){
@@ -145,18 +146,18 @@ export default class Player {
         //check collision here?
         //update current position
         if (!this.collisionX){
-            this.position.x += this.speedX; // moves per frame
+            this.position.x += this.velocity.x; // moves per frame
         } else {
             this.position.x += 0;
         }
 
         if (!this.collisionY) {
-            this.position.y += this.speedY;
+            this.position.y += this.velocity.y;
         } else {
             this.position.y += 0;
         }
-        // console.log(this.speedX)
-        // console.log(this.speedY)
+        // console.log(this.velocity.x)
+        // console.log(this.velocity.y)
         //checks if player hits edge of map
         // if((this.position.x) < 0){
         //     this.position.x = 0;
