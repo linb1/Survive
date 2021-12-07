@@ -1,13 +1,30 @@
 export default class Enemy {
-    constructor(position, velocity) {
+    constructor(position) {
         this.position = position;
         this.imgSize = 64;
         this.width = 54;
         this.height = 54;
         this.radius = 20;
         this.color = "red";
-        this.velocity = velocity;
+        this.velocity = {x:0, y:0};
+        this.maxSpeed = 2;
         this.skeleton = this.loadImage("skeleton.png")
+    }
+
+    moveLeft(){
+        this.velocity.x -= this.maxSpeed;
+    }
+
+    moveRight() {
+        this.velocity.x += this.maxSpeed;
+    }
+
+    moveUp() {
+        this.velocity.y -= this.maxSpeed;
+    }
+
+    moveDown() {
+        this.velocity.y += this.maxSpeed;
     }
 
     loadImage(fileName) {

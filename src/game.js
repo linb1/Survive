@@ -35,13 +35,26 @@ export default class Game {
             let min = (this.gameWidth / 2) - 75;
             let spawnX = Math.random() * (max - min) + min;
             let spawnY = this.gameHeight;
-            this.enemies.push(new Enemy({ x: spawnX, y: spawnY }, {x:-1, y:-1}))
+            this.enemies.push(new Enemy({ x: spawnX, y: spawnY }))
         }, 1000);
     }
 
     spawnEnemies(){
         this.spawnEnemiesTop();
         this.spawnEnemiesBottom();
+    }
+
+    followPlayer(enemy){
+        let distanceX = this.player.position.x - enemy.position.x;
+        let distanceY = this.player.position.y - enemy.position.y;
+        let magnitude = Math.hypot(distanceX, distanceY);
+        let vectorX = distanceX/magnitude;
+        let vectorY = distanceY / magnitude;
+        enemy.velocity.x = vectorX * enemy.maxSpeed;
+        enemy.velocity.y = vectorY * enemy.maxSpeed;
+        // enemy.position.x += (vectorX * enemy.maxSpeed);
+        // enemy.position.y += (vectorY * enemy.maxSpeed);
+
     }
 
     removeEnemy(){
@@ -191,7 +204,7 @@ export default class Game {
     
                 //checks if object is entering collision boundary
                 if (rightOfobject > left && prevRightOfobject <= left) {
-                    object.speedX = 0;
+                    // object.speedX = 0;
                     object.prevPosition.x = object.position.x = left - object.width - 0.01;
                     console.log("collided with left of tile");
                     return true
@@ -216,7 +229,7 @@ export default class Game {
     
                 //checks if object is entering collision boundary
                 if (leftOfobject < right && prevLeftOfobject >= right) {
-                    object.speedX = 0;
+                    // object.speedX = 0;
                     object.prevPosition.x = object.position.x = right;
                     console.log("collided with right of tile");
                     return true
@@ -239,7 +252,7 @@ export default class Game {
                 let top = tile_top * this.map.tileSize;
                 
                 if (bottomOfobject > top && prevBottomOfobject <= top) {
-                    object.speedY = 0;
+                    // object.speedY = 0;
                     object.prevPosition.y = object.position.y = top - object.height - 0.01;
                     // debugger;
                     console.log("collided with top of tile");
@@ -264,7 +277,7 @@ export default class Game {
             if ((object.position.y - object.prevPosition.y) < 0) {
                 let bottom = (tile_bottom + 1) * this.map.tileSize;
                 if (topOfobject < bottom && prevTopOfobject >= bottom) {
-                    object.speedY = 0;
+                    // object.speedY = 0;
                     object.prevPosition.y = object.position.y = bottom;
                     console.log("collided with bottom of tile");
                     return true
@@ -288,6 +301,9 @@ export default class Game {
             }
             if (object instanceof Projectile) {
                 this.checkForCollision(object);
+            }
+            if (object instanceof Enemy) {
+                this.followPlayer(object);
             }
 
         })
