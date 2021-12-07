@@ -45,6 +45,7 @@ export default class InputHandler{
                 game.player.moveLeft();
                 game.player.moveUp();
                 game.player.moveDiagonalLeftUp();
+                
             } else if (keys.includes("ArrowLeft") && keys.includes("ArrowDown")) {
                 game.player.moveLeft();
                 game.player.moveDown();

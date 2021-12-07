@@ -2,6 +2,7 @@ import Player from '/src/player.js';
 import Enemy from './enemy';
 import Map from './map';
 import CollisionHandler from './collisionHandler';
+import Projectile from './projectile';
 
 
 export default class Game {
@@ -46,14 +47,25 @@ export default class Game {
     removeEnemy(){
         this.enemies.forEach((enemy, enemyIndex) => {
             this.projectiles.forEach((projectile, projectileIndex) => {
-                let distance = Math.hypot(projectile.position.x - enemy.position.x, projectile.position.y - enemy.position.y);
-                if (distance - enemy.radius - projectile.radius < 0.5){
+                let projectileCenterX = projectile.position.x + (projectile.width/2);
+                let projectileCenterY = projectile.position.y + (projectile.height/2);
+                let enemyCenterX = enemy.position.x + (enemy.width / 2);
+                let enemyCenterY = enemy.position.y + (enemy.height / 2);
+                let distance = Math.hypot(projectileCenterX - enemyCenterX, projectileCenterY - enemyCenterY);
+                if ((distance - (enemy.width/2) - (projectile.width/2) < 0.2) ||
+                    (distance - (enemy.width / 2) - (projectile.width / 2) < 0.2))
+                {
                     this.enemies.splice(enemyIndex, 1);
-                    this.projectiles.splice(projectileIndex, 1);
+                    projectile.delete = true;
+                    this.removeProjectiles();
                 }
                 
             })
         })
+    }
+
+    removeProjectiles(){
+        this.projectiles = this.projectiles.filter(projectile => !projectile.delete)
     }
 
     gameObjects() {
@@ -79,24 +91,29 @@ export default class Game {
         }
     }
 
-    checkForCollision(player){
+    checkForCollision(object){
         //getting x and y to use for each corner of player object
-        let leftColumn = Math.floor(player.position.x / this.map.tileSize);
-        let bottomRow = Math.floor((player.position.y + player.height)/ this.map.tileSize);
-        let topRow = Math.floor(player.position.y / this.map.tileSize);
-        let rightColumn = Math.floor((player.position.x + player.width) / this.map.tileSize);
-        // console.log('bottom')
-        // console.log(bottomRow)
-        // console.log('right')
-        // console.log(rightColumn)
+        let leftColumn = Math.floor(object.position.x / this.map.tileSize);
+        let bottomRow = Math.floor((object.position.y + object.height)/ this.map.tileSize);
+        let topRow = Math.floor(object.position.y / this.map.tileSize);
+        let rightColumn = Math.floor((object.position.x + object.width) / this.map.tileSize);
+
         //check bottom-left corner
-        this.collision(this.map.collisionMap[bottomRow][leftColumn], player, bottomRow, leftColumn);
+        if (this.map.collisionMap[bottomRow][leftColumn] != 0){
+            this.collision(this.map.collisionMap[bottomRow][leftColumn], object, bottomRow, leftColumn);
+        }
         //check top-left corner
-        this.collision(this.map.collisionMap[topRow][leftColumn], player, topRow, leftColumn);
+        if (this.map.collisionMap[topRow][leftColumn] != 0) {
+            this.collision(this.map.collisionMap[topRow][leftColumn], object, topRow, leftColumn);
+        }
         //check bottom-right corner
-        this.collision(this.map.collisionMap[bottomRow][rightColumn], player, bottomRow, rightColumn);
+        if (this.map.collisionMap[bottomRow][rightColumn] != 0) {
+            this.collision(this.map.collisionMap[bottomRow][rightColumn], object, bottomRow, rightColumn);
+        }
         //check top-right corner
-        this.collision(this.map.collisionMap[topRow][rightColumn], player, topRow, rightColumn);
+        if (this.map.collisionMap[topRow][rightColumn] != 0) {
+            this.collision(this.map.collisionMap[topRow][rightColumn], object, topRow, rightColumn);
+        }
 
     }
 
@@ -109,115 +126,153 @@ export default class Game {
     // 7 = right-top collision
     // 8 = left-bottom collision
     // 9 = right-bottom collision
-    collision(value, player, tile_row, tile_column) {
-        // console.log(value)
+    collision(value, object, tile_row, tile_column) {
+        console.log("call")
         switch (value) {
             case 1:
-                this.bottomCollision(player, tile_row);
+                console.log("1")
+                this.bottomCollision(object, tile_row);
                 break;
             case 2:
-                this.rightCollision(player, tile_column);
+                console.log("2")
+                this.rightCollision(object, tile_column);
                 break;
             case 3:
-                this.leftCollision(player, tile_column);
+                console.log("3")
+                this.leftCollision(object, tile_column);
                 break;
             case 4:
-                this.topCollision(player, tile_row);
+                console.log("4")
+                this.topCollision(object, tile_row);
                 break;
             case 5:
-                if (this.topCollision(player, tile_row)) {return}
-                if (this.bottomCollision(player, tile_row)) { return }
-                if (this.leftCollision(player, tile_column)) { return }
-                this.rightCollision(player,tile_column)
+                console.log("5")
+                if (this.topCollision(object, tile_row)) {return;}
+                if (this.bottomCollision(object, tile_row)) { return; }
+                if (this.leftCollision(object, tile_column)) { return; }
+                this.rightCollision(object,tile_column)
                 break;
             case 6:
-                if (this.topCollision(player, tile_row)) { return }
-                if (this.leftCollision(player, tile_column)) { return }
+                console.log("6")
+                if (this.topCollision(object, tile_row)) { return; }
+                if (this.leftCollision(object, tile_column)) { return; }
                 break;
             case 7:
-                if (this.topCollision(player, tile_row)) { return }
-                if (this.rightCollision(player, tile_column)) { return }
+                console.log("7")
+                if (this.topCollision(object, tile_row)) { return; }
+                if (this.rightCollision(object, tile_column)) { return; }
                 break;
             case 8:
-                if (this.bottomCollision(player, tile_row)) { return }
-                if (this.leftCollision(player, tile_column)) { return }
+                console.log("8")
+                if (this.bottomCollision(object, tile_row)) { return; }
+                if (this.leftCollision(object, tile_column)) { return; }
                 break;
             case 9:
-                if (this.bottomCollision(player, tile_row)) { return }
-                if (this.rightCollision(player, tile_column)) { return }
+                console.log("9")
+                if (this.bottomCollision(object, tile_row)) { return; }
+                if (this.rightCollision(object, tile_column)) { return; }
                 break;
         }
     }
 
-    leftCollision(player, tile_left){
-
+    leftCollision(object, tile_left){
         // console.log(tile_left);
         // if object moving right (cant hit left side unless coming from right)
-        let rightOfPlayer = player.position.x + player.width;
-        let prevRightOfPlayer = player.prevPosition.x + player.width;
-        if ((player.position.x - player.prevPosition.x) > 0) {
-            let left = tile_left * this.map.tileSize;
-
-            //checks if object is entering collision boundary
-            if (rightOfPlayer > left && prevRightOfPlayer <= left) {
-                player.speedX = 0;
-                player.prevPosition.x = player.position.x = left - player.width - 0.01;
-                console.log("collided with left of tile");
-                return true
+        if (object instanceof Projectile) {
+            console.log("delete")
+            console.log("collided with left of tile");
+            object.delete = true;
+            this.removeProjectiles()
+        } else {
+            let rightOfobject = object.position.x + object.width;
+            let prevRightOfobject = object.prevPosition.x + object.width;
+            if ((object.position.x - object.prevPosition.x) > 0) {
+                let left = tile_left * this.map.tileSize;
+    
+                //checks if object is entering collision boundary
+                if (rightOfobject > left && prevRightOfobject <= left) {
+                    object.speedX = 0;
+                    object.prevPosition.x = object.position.x = left - object.width - 0.01;
+                    console.log("collided with left of tile");
+                    return true
+                }
             }
+            return false
         }
-        return false
     }
     
-    rightCollision(player, tile_right){
+    rightCollision(object, tile_right){
         // console.log(tile_right);
-        let leftOfPlayer = player.position.x;
-        let prevLeftOfPlayer = player.prevPosition.x;
-        if ((player.position.x - player.prevPosition.x) < 0) {
-            let right = (tile_right + 1) * this.map.tileSize; //right side of tile = left side of next tile
+        if (object instanceof Projectile) {
+            console.log("delete")
+            console.log("collided with right of tile");
+            object.delete = true;
+            this.removeProjectiles()
+        } else {
+            let leftOfobject = object.position.x;
+            let prevLeftOfobject = object.prevPosition.x;
+            if ((object.position.x - object.prevPosition.x) < 0) {
+                let right = (tile_right + 1) * this.map.tileSize; //right side of tile = left side of next tile
+    
+                //checks if object is entering collision boundary
+                if (leftOfobject < right && prevLeftOfobject >= right) {
+                    object.speedX = 0;
+                    object.prevPosition.x = object.position.x = right;
+                    console.log("collided with right of tile");
+                    return true
+                }
+            }
+            return false
+        }
+    }
+    
+    topCollision(object, tile_top){
+        if (object instanceof Projectile) {
+            console.log("delete")
+            console.log("collided with top of tile");
+            object.delete = true;
+            this.removeProjectiles()
+        } else {
+            let bottomOfobject = object.position.y + object.height;
+            let prevBottomOfobject = object.prevPosition.y + object.height;
+            if ((object.position.y - object.prevPosition.y) > 0) {
+                let top = tile_top * this.map.tileSize;
+                
+                if (bottomOfobject > top && prevBottomOfobject <= top) {
+                    object.speedY = 0;
+                    object.prevPosition.y = object.position.y = top - object.height - 0.01;
+                    // debugger;
+                    console.log("collided with top of tile");
+                    return true
+                }
+            }
+            return false
 
-            //checks if object is entering collision boundary
-            if (leftOfPlayer < right && prevLeftOfPlayer >= right) {
-                player.speedX = 0;
-                player.prevPosition.x = player.position.x = right;
-                console.log("collided with right of tile");
-                return true
-            }
         }
-        return false
     }
     
-    topCollision(player, tile_top){
-        let bottomOfPlayer = player.position.y + player.height;
-        let prevBottomOfPlayer = player.prevPosition.y + player.height;
-        if ((player.position.y - player.prevPosition.y) > 0) {
-            let top = tile_top * this.map.tileSize;
-            
-            if (bottomOfPlayer > top && prevBottomOfPlayer <= top) {
-                player.speedY = 0;
-                player.prevPosition.y = player.position.y = top - player.height - 0.01;
-                // debugger;
-                console.log("collided with top of tile");
-                return true
-            }
-        }
-        return false
-    }
-    
-    bottomCollision(player, tile_bottom){
+    bottomCollision(object, tile_bottom){
         // console.log(tile_bottom);
-        let topOfPlayer = player.position.y;
-        let prevTopOfPlayer = player.prevPosition.y;
-        if ((player.position.y - player.prevPosition.y) < 0) {
-            let bottom = (tile_bottom + 1) * this.map.tileSize;
-            if (topOfPlayer < bottom && prevTopOfPlayer >= bottom) {
-                player.speedY = 0;
-                player.prevPosition.y = player.position.y = bottom;
-                console.log("collided with bottom of tile");
-                return true
+        if (object instanceof Projectile) {
+            console.log("delete")
+            console.log("collided with bottom of tile");
+            object.delete = true;
+            this.removeProjectiles()
+        } else {
+            let topOfobject = object.position.y;
+            let prevTopOfobject = object.prevPosition.y;
+            if ((object.position.y - object.prevPosition.y) < 0) {
+                let bottom = (tile_bottom + 1) * this.map.tileSize;
+                if (topOfobject < bottom && prevTopOfobject >= bottom) {
+                    object.speedY = 0;
+                    object.prevPosition.y = object.position.y = bottom;
+                    console.log("collided with bottom of tile");
+                    return true
+                }
             }
+            return false
+
         }
-        return false
     }
 
     update(deltaTime){
@@ -225,7 +280,16 @@ export default class Game {
         this.gameObjects().forEach((object) => {
             object.update(deltaTime)
             this.removeEnemy();
-            this.checkForCollision(this.player);
+            // this.removeProjectiles();
+            // console.log(object)
+            // console.log(object instanceof Player)
+            if (object instanceof Player) {
+                this.checkForCollision(object);
+            }
+            if (object instanceof Projectile) {
+                this.checkForCollision(object);
+            }
+
         })
         this.borderCollision(this.player);
         // console.log(this.player.speedX)

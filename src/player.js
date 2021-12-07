@@ -5,8 +5,8 @@ export default class Player {
         this.game = game;
         this.gameWidth = game.gameWidth;
         this.gameHeight = game.gameHeight;
-        this.width = 15;
-        this.height = 30;
+        this.width = 32;
+        this.height = 48;
         this.position = {
             x: (game.gameWidth/2) - (this.width/2),
             y: (game.gameHeight/2) - (this.height/2)
@@ -20,6 +20,15 @@ export default class Player {
         this.speedY = 0;
         this.maxSpeed = 5;
         this.direction = "faceDown";
+        this.collisionX = false;
+        this.collisionY = false;
+        this.witch = this.loadImage("witch.png")
+    }
+
+    loadImage(fileName) {
+        let img = new Image();
+        img.src = `src/images/${fileName}`;
+        return img;
     }
     //move player
     moveLeft() {
@@ -110,10 +119,21 @@ export default class Player {
     }
     //draw go to a different class later
     draw(ctx){
-        ctx.beginPath();
-        ctx.rect(this.position.x, this.position.y, this.width, this.height);
-        ctx.fillStyle = this.color;
-        ctx.fill();
+        ctx.drawImage(
+            this.witch,
+            0,
+            0,
+            32,
+            48,
+            this.position.x,
+            this.position.y,
+            this.width+4,
+            this.height+6
+        )
+        // ctx.beginPath();
+        // ctx.rect(this.position.x, this.position.y, this.width, this.height);
+        // ctx.fillStyle = this.color;
+        // ctx.fill();
     }
 
     update(deltaTime){ // deltatime - how much time has pass since last update
@@ -124,8 +144,19 @@ export default class Player {
         this.prevPosition.y = this.position.y;
         //check collision here?
         //update current position
-        this.position.x += this.speedX; // moves per frame
-        this.position.y += this.speedY;
+        if (!this.collisionX){
+            this.position.x += this.speedX; // moves per frame
+        } else {
+            this.position.x += 0;
+        }
+
+        if (!this.collisionY) {
+            this.position.y += this.speedY;
+        } else {
+            this.position.y += 0;
+        }
+        // console.log(this.speedX)
+        // console.log(this.speedY)
         //checks if player hits edge of map
         // if((this.position.x) < 0){
         //     this.position.x = 0;
