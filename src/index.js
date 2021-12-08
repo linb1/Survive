@@ -10,6 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let game = new Game(GAME_WIDTH, GAME_HEIGHT);
     let gameview = new GameView(ctx, game);
-    gameview.start(); // animates/renders the game
+    gameview.startGameView(); // animates/renders the game
 
 });

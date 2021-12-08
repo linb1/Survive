@@ -1,17 +1,36 @@
 import InputHandler from '/src/input.js';
+
+const GAMESTATE = {
+    PAUSED: 0,
+    RUNNING: 1,
+    MENU: 2,
+    GAMEOVER: 3
+}
 export default class GameView{
 
     constructor(context, game){
         this.context = context;
         this.game = game;
+        new InputHandler(this.game, this);
     }
 
     start(){
-        new InputHandler(this.game);
-        // this.lastTime = 0; // when game created, starts at 0
+        if (this.game.gameState !== GAMESTATE.MENU) return;
+        this.game.gameState = GAMESTATE.RUNNING;
         this.game.spawnEnemies();
+    }
+    
+    startGameView(){
         requestAnimationFrame(this.animate.bind(this))
     }
+
+    // togglePause(){
+    //     if(this.gameState === GAMESTATE.PAUSED){
+    //         this.gameState = GAMESTATE.RUNNING;
+    //     } else {
+    //         this.gameState = GAMESTATE.PAUSED;
+    //     }
+    // }
 
     animate(timestamp){
         let deltaTime = timestamp - this.lastTime; // deltatime - how much time has pass since last update

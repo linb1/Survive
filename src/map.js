@@ -2,7 +2,9 @@ export default class Map {
     constructor() {
         this.tileSize = 32;
         this.wall = this.loadImage("stone.png");
-        this.ice_floor = this.loadImage("ice.png")
+        this.ice_floor = this.loadImage("ice.png");
+        this.grass_floor = this.loadImage("grass.png");
+        this.floor = this.loadImage("floor.png")
     }
 
     loadImage(fileName){
@@ -86,7 +88,7 @@ export default class Map {
                         image = this.wall;
                         break;
                     case 0:
-                        image = this.ice_floor;
+                        image = this.floor;
                         break;
                 }
 

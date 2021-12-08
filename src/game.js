@@ -4,6 +4,12 @@ import Map from './map';
 import CollisionHandler from './collisionHandler';
 import Projectile from './projectile';
 
+const GAMESTATE = {
+    PAUSED: 0,
+    RUNNING: 1,
+    MENU: 2,
+    GAMEOVER: 3
+}
 
 export default class Game {
     constructor(gameWidth, gameHeight){
@@ -13,6 +19,29 @@ export default class Game {
         this.player = new Player(this);
         this.projectiles = [];
         this.enemies = [];
+        this.gameState = GAMESTATE.MENU;
+    }
+
+    start() {
+        if (this.gameState !== GAMESTATE.MENU) return;
+        this.gameState = GAMESTATE.RUNNING;
+        this.spawnEnemies();
+    }
+
+    reset() {
+        this.gameState = GAMESTATE.RUNNING;
+        this.player = new Player(this);
+        this.projectiles = [];
+        this.enemies = [];
+        this.spawnEnemies();
+    }
+
+    togglePause() {
+        if (this.gameState === GAMESTATE.PAUSED) {
+            this.gameState = GAMESTATE.RUNNING;
+        } else {
+            this.gameState = GAMESTATE.PAUSED;
+        }
     }
 
     addProjectile(projectile) {
@@ -58,8 +87,71 @@ export default class Game {
             (magnitude - (enemy.width / 2) - (this.player.width / 2) < 0.2)) {
             enemy.velocity.x = 0;
             enemy.velocity.y = 0;
+            if (this.player.health > 0){
+                this.player.health--;
+            }
         }
 
+    }
+
+    moveWhenCollided(enemy){
+        let distanceX = this.player.position.x - enemy.position.x;
+        let distanceY = this.player.position.y - enemy.position.y;
+        let currentMagnitude = Math.hypot(distanceX, distanceY);
+        console.log(enemy.collision.sideLR)
+        console.log(enemy.collision.sideTB)
+        if (enemy.collision.sideLR || enemy.collision.sideTB){
+            if (enemy.collision.sideLR) {
+                console.log("hello")
+                if (distanceY < 0){
+                    let nextDistanceY = this.player.position.y - enemy.position.y - enemy.maxSpeed;
+                    let nextMagnitude = Math.hypot(distanceX, nextDistanceY);
+                    if (nextMagnitude < currentMagnitude){
+                        enemy.velocity.y = -enemy.maxSpeed;
+                    } else {
+                        this.followPlayer(enemy);
+                        return;
+                    }
+                }
+
+                if (distanceY > 0){
+                    let nextDistanceY = this.player.position.y - enemy.position.y + enemy.maxSpeed;
+                    let nextMagnitude = Math.hypot(distanceX, nextDistanceY);
+                    if (nextMagnitude < currentMagnitude) {
+                        enemy.velocity.y = enemy.maxSpeed;
+                    } else {
+                        this.followPlayer(enemy);
+                        return;
+                    }
+                }
+            }
+
+            if (enemy.collision.sideTB) {
+                if (distanceX < 0) {
+                    let nextDistanceX = this.player.position.x - enemy.position.x - enemy.maxSpeed;
+                    let nextMagnitude = Math.hypot(nextDistanceX, distanceY);
+                    if (nextMagnitude < currentMagnitude) {
+                        enemy.velocity.x = -enemy.maxSpeed;
+                    } else {
+                        this.followPlayer(enemy);
+                        return;
+                    }
+                }
+
+                if (distanceX > 0) {
+                    let nextDistanceX = this.player.position.x - enemy.position.x + enemy.maxSpeed;
+                    let nextMagnitude = Math.hypot(nextDistanceX, distanceY);
+                    if (nextMagnitude < currentMagnitude) {
+                        enemy.velocity.x = enemy.maxSpeed;
+                    } else {
+                        this.followPlayer(enemy);
+                        return;
+                    }
+                }
+            }
+        } else {
+            this.followPlayer(enemy);
+        }
     }
 
     removeEnemy(){
@@ -141,6 +233,15 @@ export default class Game {
         let topRow = Math.floor(object.position.y / this.map.tileSize);
         let rightColumn = Math.floor((object.position.x + object.width) / this.map.tileSize);
 
+        // if ((this.map.collisionMap[topRow][rightColumn] === 0) &&
+        //     (this.map.collisionMap[bottomRow][rightColumn] === 0) &&
+        //     (this.map.collisionMap[topRow][leftColumn] === 0) &&
+        //     (this.map.collisionMap[bottomRow][leftColumn] === 0)){
+        //         if (object instanceof Enemy){
+        //             this.followPlayer;
+        //         }
+        // }
+
         //check bottom-left corner
         if (this.map.collisionMap[bottomRow][leftColumn] != 0){
             this.collision(this.map.collisionMap[bottomRow][leftColumn], object, bottomRow, leftColumn);
@@ -158,6 +259,8 @@ export default class Game {
             this.collision(this.map.collisionMap[topRow][rightColumn], object, topRow, rightColumn);
         }
 
+
+
     }
 
     // 1 = ceiling (bottom collision)
@@ -170,48 +273,48 @@ export default class Game {
     // 8 = left-bottom collision
     // 9 = right-bottom collision
     collision(value, object, tile_row, tile_column) {
-        console.log("call")
+        // console.log("call")
         switch (value) {
             case 1:
-                console.log("1")
+                // console.log("1")
                 this.bottomCollision(object, tile_row);
                 break;
             case 2:
-                console.log("2")
+                // console.log("2")
                 this.rightCollision(object, tile_column);
                 break;
             case 3:
-                console.log("3")
+                // console.log("3")
                 this.leftCollision(object, tile_column);
                 break;
             case 4:
-                console.log("4")
+                // console.log("4")
                 this.topCollision(object, tile_row);
                 break;
             case 5:
-                console.log("5")
+                // console.log("5")
                 if (this.topCollision(object, tile_row)) {return;}
                 if (this.bottomCollision(object, tile_row)) { return; }
                 if (this.leftCollision(object, tile_column)) { return; }
                 this.rightCollision(object,tile_column)
                 break;
             case 6:
-                console.log("6")
+                // console.log("6")
                 if (this.topCollision(object, tile_row)) { return; }
                 if (this.leftCollision(object, tile_column)) { return; }
                 break;
             case 7:
-                console.log("7")
+                // console.log("7")
                 if (this.topCollision(object, tile_row)) { return; }
                 if (this.rightCollision(object, tile_column)) { return; }
                 break;
             case 8:
-                console.log("8")
+                // console.log("8")
                 if (this.bottomCollision(object, tile_row)) { return; }
                 if (this.leftCollision(object, tile_column)) { return; }
                 break;
             case 9:
-                console.log("9")
+                // console.log("9")
                 if (this.bottomCollision(object, tile_row)) { return; }
                 if (this.rightCollision(object, tile_column)) { return; }
                 break;
@@ -235,10 +338,18 @@ export default class Game {
                 //checks if object is entering collision boundary
                 if (rightOfobject > left && prevRightOfobject <= left) {
                     // object.velocity.x = 0;
+                    if (object instanceof Enemy){
+                        // console.log("left collision")
+                        // object.collision.sideLR = true;
+                    }
                     object.prevPosition.x = object.position.x = left - object.width - 0.01;
                     console.log("collided with left of tile");
                     return true
                 }
+            }
+            if (object instanceof Enemy) {
+                // console.log("no left collision")
+                // object.collision.sideLR = false;
             }
             return false
         }
@@ -260,10 +371,18 @@ export default class Game {
                 //checks if object is entering collision boundary
                 if (leftOfobject < right && prevLeftOfobject >= right) {
                     // object.velocity.x = 0;
+                    if (object instanceof Enemy) {
+                        // console.log("right collision")
+                        // object.collision.sideLR = true;
+                    }
                     object.prevPosition.x = object.position.x = right;
                     console.log("collided with right of tile");
                     return true
                 }
+            }
+            if (object instanceof Enemy) {
+                // console.log("no right collision")
+                // object.collision.sideLR = false;
             }
             return false
         }
@@ -283,11 +402,19 @@ export default class Game {
                 
                 if (bottomOfobject > top && prevBottomOfobject <= top) {
                     // object.velocity.y = 0;
+                    if (object instanceof Enemy) {
+                        // console.log("top collision")
+                        // object.collision.sideTB = true;
+                    }
                     object.prevPosition.y = object.position.y = top - object.height - 0.01;
                     // debugger;
                     console.log("collided with top of tile");
                     return true
                 }
+            }
+            if (object instanceof Enemy) {
+                // console.log("no top collision")
+                // object.collision.sideTB = false;
             }
             return false
 
@@ -308,10 +435,18 @@ export default class Game {
                 let bottom = (tile_bottom + 1) * this.map.tileSize;
                 if (topOfobject < bottom && prevTopOfobject >= bottom) {
                     // object.velocity.y = 0;
+                    if (object instanceof Enemy) {
+                        // console.log("bottom collision")
+                        // object.collision.sideTB = true;
+                    }
                     object.prevPosition.y = object.position.y = bottom;
                     console.log("collided with bottom of tile");
                     return true
                 }
+            }
+            if (object instanceof Enemy) {
+                // console.log("no bottom collision")
+                // object.collision.sideTB = false;
             }
             return false
 
@@ -320,6 +455,13 @@ export default class Game {
 
     update(deltaTime){
         // this.player.update(deltaTime);
+
+        if(this.player.health === 0) {
+            this.gameState = GAMESTATE.GAMEOVER;
+        }
+
+        if (this.gameState === GAMESTATE.PAUSED || this.gameState === GAMESTATE.MENU || this.gameState === GAMESTATE.MENU) return;
+
         this.gameObjects().forEach((object) => {
             object.update(deltaTime)
             this.removeEnemy();
@@ -336,7 +478,8 @@ export default class Game {
             }
             if (object instanceof Enemy) {
                 this.followPlayer(object);
-                if (object.position.y > 1){
+                if (object.position.y > 2){
+                    // this.moveWhenCollided(object);
                     this.borderCollision(object);
                     this.checkForCollision(object);
                 }
@@ -352,5 +495,39 @@ export default class Game {
         this.gameObjects().forEach((object) => {
             object.draw(ctx)
         })
+
+        if(this.gameState === GAMESTATE.PAUSED){
+            ctx.rect(0,0, this.gameWidth, this.gameHeight);
+            ctx.fillStyle = "rgba(0,0,0,0.5)"
+            ctx.fill();
+
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText("Paused", this.gameWidth/2, this.gameHeight/2);
+        }
+
+        if (this.gameState === GAMESTATE.MENU) {
+            ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+            ctx.fillStyle = "rgba(0,0,0,1)"
+            ctx.fill();
+
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText("Press ENTER To Start", this.gameWidth / 2, this.gameHeight / 2);
+        }
+
+        if (this.gameState === GAMESTATE.GAMEOVER) {
+            ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+            ctx.fillStyle = "rgba(0,0,0,1)"
+            ctx.fill();
+
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText("GAME OVER", this.gameWidth / 2, this.gameHeight / 2);
+            ctx.fillText("Press ENTER to Play Again", this.gameWidth / 2, (this.gameHeight/2)+50);
+        }
     }
 }

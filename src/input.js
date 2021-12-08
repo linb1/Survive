@@ -1,6 +1,6 @@
 import Game from './game';
 export default class InputHandler{
-    constructor(game) {
+    constructor(game, gameView) {
         // moves game.player when key down
         this.inputs = {
             "ArrowLeft": {pressed: false, timeStamp: null},
@@ -12,7 +12,7 @@ export default class InputHandler{
             if (!this.inputs[event.key]){
                 this.inputs[event.key] = {pressed: false, timeStamp: event.timeStamp};
             }
-            // console.log("inputs")
+            console.log(this.inputs)
             //log inputs
             switch (event.key){
                 case " ":
@@ -34,6 +34,16 @@ export default class InputHandler{
                 case "ArrowDown":
                     this.inputs[event.key].pressed = true;
                     this.inputs[event.key].timeStamp = event.timeStamp;
+                    break;
+                case "p":
+                    game.togglePause();
+                    break;
+                case "Enter":
+                    if (game.gameState === 2){
+                        game.start();
+                    } else if (game.gameState === 3) {
+                        game.reset()
+                    }
                     break;
             }
             // console.log(this.inputs)

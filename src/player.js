@@ -24,6 +24,7 @@ export default class Player {
         this.collisionX = false;
         this.collisionY = false;
         this.witch = this.loadImage("witch.png")
+        this.health = 1;
     }
 
     loadImage(fileName) {
