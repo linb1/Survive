@@ -11,7 +11,7 @@ export default class GameView{
     constructor(context, game){
         this.context = context;
         this.game = game;
-        new InputHandler(this.game, this);
+        new InputHandler(this.game);
     }
 
     start(){

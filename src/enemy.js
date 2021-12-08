@@ -1,35 +1,21 @@
 export default class Enemy {
-    constructor(position, prevPosition) {
+    constructor(position, prevPosition, health, enemyId) {
         this.position = position;
         this.prevPosition = prevPosition;
-        this.imgSize = 64;
-        this.width = 50;
-        this.height = 48;
-        this.radius = 20;
+        this.width = 30;
+        this.height = 32;
+        this.imgWidth = this.width*1.1;
         this.color = "red";
         this.velocity = {x:0, y:0};
-        this.maxSpeed = 2;
+        this.maxSpeed = 1;
         this.skeleton = this.loadImage("skeleton.png")
         this.collision = {
             sideLR: false,
             sideTB: false
         }
-    }
-
-    moveLeft(){
-        this.velocity.x -= this.maxSpeed;
-    }
-
-    moveRight() {
-        this.velocity.x += this.maxSpeed;
-    }
-
-    moveUp() {
-        this.velocity.y -= this.maxSpeed;
-    }
-
-    moveDown() {
-        this.velocity.y += this.maxSpeed;
+        this.health = health;
+        this.delete = false;
+        this.id = enemyId;
     }
 
     loadImage(fileName) {
@@ -41,14 +27,14 @@ export default class Enemy {
     draw(ctx) {
         ctx.drawImage(
             this.skeleton,
-            0,
-            0,
-            50,
-            48,
+            15,
+            10,
+            30,
+            32,
             this.position.x,
             this.position.y,
-            this.width*1.5,
-            this.height*1.5
+            this.imgWidth,
+            this.height*1.1
         )
         // ctx.fillStyle = this.color;
         // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);

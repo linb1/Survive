@@ -1,5 +1,5 @@
 import Projectile from "./projectile";
-import CollisionHandler from './collisionHandler';
+// import CollisionHandler from './collisionHandler';
 export default class Player {
     constructor(game) {
         this.game = game;
@@ -15,16 +15,16 @@ export default class Player {
             x: (game.gameWidth / 2) - (this.width / 2),
             y: (game.gameHeight / 2) - (this.height / 2)
         }
-        this.color = "green";
-        this.speedX = 0;
-        this.speedY = 0;
+        this.color = "green"; //remove later
         this.velocity = { x:0, y:0 };
-        this.maxSpeed = 5;
+        this.maxSpeed = 2;
         this.direction = "faceDown";
-        this.collisionX = false;
-        this.collisionY = false;
+        this.collisionX = false; // not used?
+        this.collisionY = false; // not used?
         this.witch = this.loadImage("witch.png")
-        this.health = 1;
+        this.score = 0;
+        this.health = 2;
+        this.invincible = false;
     }
 
     loadImage(fileName) {
@@ -109,8 +109,8 @@ export default class Player {
     }
 
     shoot() {
-        let x = this.position.x; //top // get snapshot of player position (passing in this.position makes bullet follow player)
-        let y = this.position.y;
+        let x = this.position.x + (this.width/2); //top // get snapshot of player position (passing in this.position makes bullet follow player)
+        let y = this.position.y + (this.height/2);
 
         // xy == bottom
         let velocity = this.getProjectileVelocity();
@@ -129,8 +129,8 @@ export default class Player {
             48,
             this.position.x,
             this.position.y,
-            this.width+4,
-            this.height+6
+            this.width,
+            this.height
         )
         // ctx.beginPath();
         // ctx.rect(this.position.x, this.position.y, this.width, this.height);
@@ -157,24 +157,5 @@ export default class Player {
         } else {
             this.position.y += 0;
         }
-        // console.log(this.velocity.x)
-        // console.log(this.velocity.y)
-        //checks if player hits edge of map
-        // if((this.position.x) < 0){
-        //     this.position.x = 0;
-        //     this.prevPosition.x = 0
-        // }
-        // if((this.position.x + this.width) > this.gameWidth){
-        //     this.position.x = this.gameWidth - this.width;
-        //     this.prevPosition.x = this.gameWidth - this.width;
-        // }
-        // if ((this.position.y) < 0) {
-        //     this.position.y = 0;
-        //     this.prevPosition.y = 0;
-        // }
-        // if ((this.position.y + this.height) > this.gameHeight) {
-        //     this.position.y = this.gameHeight - this.height;
-        //     this.prevPosition.y = this.gameHeight - this.height;
-        // }
     }
 }

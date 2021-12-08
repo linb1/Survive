@@ -1,7 +1,6 @@
 import Player from '/src/player.js';
 import Enemy from './enemy';
 import Map from './map';
-import CollisionHandler from './collisionHandler';
 import Projectile from './projectile';
 
 const GAMESTATE = {
@@ -20,6 +19,8 @@ export default class Game {
         this.projectiles = [];
         this.enemies = [];
         this.gameState = GAMESTATE.MENU;
+        this.difficulty = 1;
+        this.enemyID = 0;
     }
 
     start() {
@@ -33,7 +34,7 @@ export default class Game {
         this.player = new Player(this);
         this.projectiles = [];
         this.enemies = [];
-        this.spawnEnemies();
+        // this.spawnEnemies();
     }
 
     togglePause() {
@@ -49,29 +50,63 @@ export default class Game {
     }
 
     spawnEnemiesTop() {
-        // setInterval(() => {
+        setInterval(() => {
+            if (this.gameState === GAMESTATE.PAUSED) return;
+            if (this.gameState === GAMESTATE.GAMEOVER) return;
             let max = (this.gameWidth/2) + 75;
             let min = (this.gameWidth / 2) - 75;
-            let spawnX = Math.random() * (max-min) + min;
-            let spawnY = 0;
-            this.enemies.push(new Enemy({ x: spawnX, y: spawnY }, { x: 1, y: 1 }))
-        // }, 1000);
+            for(let i = 0; i < 2; i++){
+                let spawnX = Math.random() * (max-min) + min;
+                let spawnY = 0;
+                let spawnPosition = { x: spawnX, y: spawnY }
+                // console.log(this.enemyID)
+                this.enemies.push(new Enemy(spawnPosition, { x: 0, y: 0 }, this.difficulty, this.enemyID))
+                this.enemyID++;
+            }
+        }, 1000);
     }
 
     spawnEnemiesBottom(){
         setInterval(() => {
+            if (this.gameState === GAMESTATE.PAUSED) return;
+            if (this.gameState === GAMESTATE.GAMEOVER) return;
             let max = (this.gameWidth / 2) + 75;
             let min = (this.gameWidth / 2) - 75;
-            let spawnX = Math.random() * (max - min) + min;
-            let spawnY = this.gameHeight;
-            let spawnPosition = {x: spawnX, y:spawnY }
-            this.enemies.push(new Enemy(spawnPosition, spawnPosition))
-        }, 1000);
+            for (let i = 0; i < 2; i++) {
+                let spawnX = Math.random() * (max - min) + min;
+                let spawnY = this.gameHeight;
+                let spawnPosition = { x: spawnX, y: spawnY }
+                // console.log(this.enemyID)
+                this.enemies.push(new Enemy(spawnPosition, { x: 0, y: 0 }, this.difficulty, this.enemyID))
+                this.enemyID++;
+            }
+        }, 3000);
     }
 
     spawnEnemies(){
         this.spawnEnemiesTop();
-        // this.spawnEnemiesBottom();
+        this.spawnEnemiesBottom();
+    }
+
+    setToVunerable(){
+        // debugger;
+        this.player.invincible = false;
+    }
+
+    debounce(func, timeout){
+        console.log("debounce")
+        let timer;
+        console.log(timer)
+        return (...args) => {
+            console.log("working??")
+            if(!timer){
+                console.log("SET FALSE")
+                func.apply(this, args)
+            }
+            clearTimeout(timer);
+            timer = setTimeout(()=> {timer = undefined;}, timeout);
+        };
+
     }
 
     followPlayer(enemy){
@@ -88,75 +123,24 @@ export default class Game {
             enemy.velocity.x = 0;
             enemy.velocity.y = 0;
             if (this.player.health > 0){
-                this.player.health--;
+                // x--;
+                //set interval - 5sec => this.player.invinciable = true
+                if (!this.player.invincible){
+                    this.player.health--;
+                    this.player.invincible = true;
+                    console.log(this.player.invincible)
+                    console.log(this.player.health)
+                    setTimeout(this.setToVunerable.bind(this), 2000);
+                }
+                
             }
         }
 
-    }
-
-    moveWhenCollided(enemy){
-        let distanceX = this.player.position.x - enemy.position.x;
-        let distanceY = this.player.position.y - enemy.position.y;
-        let currentMagnitude = Math.hypot(distanceX, distanceY);
-        console.log(enemy.collision.sideLR)
-        console.log(enemy.collision.sideTB)
-        if (enemy.collision.sideLR || enemy.collision.sideTB){
-            if (enemy.collision.sideLR) {
-                console.log("hello")
-                if (distanceY < 0){
-                    let nextDistanceY = this.player.position.y - enemy.position.y - enemy.maxSpeed;
-                    let nextMagnitude = Math.hypot(distanceX, nextDistanceY);
-                    if (nextMagnitude < currentMagnitude){
-                        enemy.velocity.y = -enemy.maxSpeed;
-                    } else {
-                        this.followPlayer(enemy);
-                        return;
-                    }
-                }
-
-                if (distanceY > 0){
-                    let nextDistanceY = this.player.position.y - enemy.position.y + enemy.maxSpeed;
-                    let nextMagnitude = Math.hypot(distanceX, nextDistanceY);
-                    if (nextMagnitude < currentMagnitude) {
-                        enemy.velocity.y = enemy.maxSpeed;
-                    } else {
-                        this.followPlayer(enemy);
-                        return;
-                    }
-                }
-            }
-
-            if (enemy.collision.sideTB) {
-                if (distanceX < 0) {
-                    let nextDistanceX = this.player.position.x - enemy.position.x - enemy.maxSpeed;
-                    let nextMagnitude = Math.hypot(nextDistanceX, distanceY);
-                    if (nextMagnitude < currentMagnitude) {
-                        enemy.velocity.x = -enemy.maxSpeed;
-                    } else {
-                        this.followPlayer(enemy);
-                        return;
-                    }
-                }
-
-                if (distanceX > 0) {
-                    let nextDistanceX = this.player.position.x - enemy.position.x + enemy.maxSpeed;
-                    let nextMagnitude = Math.hypot(nextDistanceX, distanceY);
-                    if (nextMagnitude < currentMagnitude) {
-                        enemy.velocity.x = enemy.maxSpeed;
-                    } else {
-                        this.followPlayer(enemy);
-                        return;
-                    }
-                }
-            }
-        } else {
-            this.followPlayer(enemy);
-        }
     }
 
     removeEnemy(){
         this.enemies.forEach((enemy, enemyIndex) => {
-            this.projectiles.forEach((projectile, projectileIndex) => {
+            this.projectiles.forEach((projectile) => {
                 let projectileCenterX = projectile.position.x + (projectile.width/2);
                 let projectileCenterY = projectile.position.y + (projectile.height/2);
                 let enemyCenterX = enemy.position.x + (enemy.width / 2);
@@ -165,33 +149,69 @@ export default class Game {
                 if ((distance - (enemy.width/2) - (projectile.width/2) < 0.2) ||
                     (distance - (enemy.width / 2) - (projectile.width / 2) < 0.2))
                 {
-                    this.enemies.splice(enemyIndex, 1);
+                    enemy.health--;
+                    if(enemy.health === 0){
+                        enemy.delete = true;
+                        this.defeatEnemy();
+                        this.player.score++;
+                        this.increaseDifficulty();
+                    }
                     projectile.delete = true;
                     this.removeProjectiles();
+                    console.log(this.player.score)
                 }
                 
             })
         })
     }
 
+    defeatEnemy(){
+        this.enemies = this.enemies.filter(enemy => !enemy.delete)
+    }
     removeProjectiles(){
         this.projectiles = this.projectiles.filter(projectile => !projectile.delete)
+    }
+
+    increaseDifficulty(){ // goal: increase health after x amount of kills
+        if ((this.player.score % 10 == 0) && (this.player.score !== 0)){
+            this.difficulty += 1;
+        }
     }
 
     gameObjects() {
         return [].concat(this.player, this.projectiles, this.enemies)
     }
 
+    enemyCollision(enemy){
+        this.enemies.forEach(other => {
+            if (enemy.id !== other.id){
+                if ((enemy.position.x) < (other.position.x + other.width)) {
+                    enemy.position.x = (other.position.x + other.width);
+                }
+                if ((enemy.position.x + enemy.width) > (other.position.x)) {
+                    enemy.velocity.x = 0;
+                    enemy.position.x = (other.position.x - enemy.width);
+                }
+                if ((enemy.position.y) < (other.position.y + other.height)) {
+                    enemy.velocity.y = 0;
+                    enemy.position.y = (other.position.y + other.height);
+                }
+                if ((enemy.position.y + enemy.height) > (other.position.y + other.height)) {
+                    enemy.velocity.y = 0;
+                    enemy.position.y = (other.position.y - enemy.height);
+                }
+            }
+        })
+    }
+
     borderCollision(object) {
         if (object instanceof Projectile) {
-            console.log("delete")
-            console.log("collided with border");
             if ((object.position.x) < 0) {
                 object.position.x = 0.01;
                 object.delete = true;
                 this.removeProjectiles()
             }
-            if ((object.position.x + object.width) > this.gameWidth) {
+            if ((object.position.x + object.width + 0.01) > this.gameWidth) {
                 object.position.x = this.gameWidth - object.width - 0.01;
                 object.delete = true;
                 this.removeProjectiles()
@@ -201,7 +221,7 @@ export default class Game {
                 object.delete = true;
                 this.removeProjectiles()
             }
-            if ((object.position.y + object.height) > this.gameHeight) {
+            if ((object.position.y + object.height + 0.01) > this.gameHeight) {
                 object.position.y = this.gameHeight - object.height - 0.01;
                 object.delete = true;
                 this.removeProjectiles()
@@ -211,7 +231,7 @@ export default class Game {
                 object.velocity.x = 0;
                 object.position.x = 0.01;
             }
-            if ((object.position.x + object.width) > this.gameWidth) {
+            if ((object.position.x + object.width + 0.01) > this.gameWidth) {
                 object.velocity.x = 0;
                 object.position.x = this.gameWidth - object.width - 0.01; //detection issues when right/bottom sides are directly on the edge? breaks tile collision code if object happens to get through
             }
@@ -219,7 +239,7 @@ export default class Game {
                 object.velocity.y = 0;
                 object.position.y = 0.01;
             }
-            if ((object.position.y + object.height) > this.gameHeight) {
+            if ((object.position.y + object.height + 0.01) > this.gameHeight) { 
                 object.velocity.y = 0;
                 object.position.y = this.gameHeight - object.height - 0.01; //detection issues when right/bottom sides are directly on the edge? breaks tile collision code if player happens to get through
             }
@@ -325,8 +345,8 @@ export default class Game {
         // console.log(tile_left);
         // if object moving right (cant hit left side unless coming from right)
         if (object instanceof Projectile) {
-            console.log("delete")
-            console.log("collided with left of tile");
+            // console.log("delete")
+            // console.log("collided with left of tile");
             object.delete = true;
             this.removeProjectiles()
         } else {
@@ -343,7 +363,7 @@ export default class Game {
                         // object.collision.sideLR = true;
                     }
                     object.prevPosition.x = object.position.x = left - object.width - 0.01;
-                    console.log("collided with left of tile");
+                    // console.log("collided with left of tile");
                     return true
                 }
             }
@@ -358,8 +378,8 @@ export default class Game {
     rightCollision(object, tile_right){
         // console.log(tile_right);
         if (object instanceof Projectile) {
-            console.log("delete")
-            console.log("collided with right of tile");
+            // console.log("delete")
+            // console.log("collided with right of tile");
             object.delete = true;
             this.removeProjectiles()
         } else {
@@ -376,7 +396,7 @@ export default class Game {
                         // object.collision.sideLR = true;
                     }
                     object.prevPosition.x = object.position.x = right;
-                    console.log("collided with right of tile");
+                    // console.log("collided with right of tile");
                     return true
                 }
             }
@@ -390,8 +410,8 @@ export default class Game {
     
     topCollision(object, tile_top){
         if (object instanceof Projectile) {
-            console.log("delete")
-            console.log("collided with top of tile");
+            // console.log("delete")
+            // console.log("collided with top of tile");
             object.delete = true;
             this.removeProjectiles()
         } else {
@@ -408,7 +428,7 @@ export default class Game {
                     }
                     object.prevPosition.y = object.position.y = top - object.height - 0.01;
                     // debugger;
-                    console.log("collided with top of tile");
+                    // console.log("collided with top of tile");
                     return true
                 }
             }
@@ -424,8 +444,8 @@ export default class Game {
     bottomCollision(object, tile_bottom){
         // console.log(tile_bottom);
         if (object instanceof Projectile) {
-            console.log("delete")
-            console.log("collided with bottom of tile");
+            // console.log("delete")
+            // console.log("collided with bottom of tile");
             object.delete = true;
             this.removeProjectiles()
         } else {
@@ -440,7 +460,7 @@ export default class Game {
                         // object.collision.sideTB = true;
                     }
                     object.prevPosition.y = object.position.y = bottom;
-                    console.log("collided with bottom of tile");
+                    // console.log("collided with bottom of tile");
                     return true
                 }
             }
@@ -458,10 +478,14 @@ export default class Game {
 
         if(this.player.health === 0) {
             this.gameState = GAMESTATE.GAMEOVER;
+            this.projectiles = [];
+            this.enemies = [];
         }
 
         if (this.gameState === GAMESTATE.PAUSED || this.gameState === GAMESTATE.MENU || this.gameState === GAMESTATE.MENU) return;
-
+        // this.increaseDifficulty();
+        // console.log("difficult")
+        // console.log(this.difficulty)
         this.gameObjects().forEach((object) => {
             object.update(deltaTime)
             this.removeEnemy();
@@ -478,8 +502,9 @@ export default class Game {
             }
             if (object instanceof Enemy) {
                 this.followPlayer(object);
-                if (object.position.y > 2){
+                if (object.position.y > 2 && object.position.y < (this.gameHeight - 2)){
                     // this.moveWhenCollided(object);
+                    // this.enemyCollision(object);
                     this.borderCollision(object);
                     this.checkForCollision(object);
                 }
@@ -531,3 +556,67 @@ export default class Game {
         }
     }
 }
+
+
+
+
+
+// moveWhenCollided(enemy){
+//     let distanceX = this.player.position.x - enemy.position.x;
+//     let distanceY = this.player.position.y - enemy.position.y;
+//     let currentMagnitude = Math.hypot(distanceX, distanceY);
+//     console.log(enemy.collision.sideLR)
+//     console.log(enemy.collision.sideTB)
+//     if (enemy.collision.sideLR || enemy.collision.sideTB) {
+//         if (enemy.collision.sideLR) {
+//             console.log("hello")
+//             if (distanceY < 0) {
+//                 let nextDistanceY = this.player.position.y - enemy.position.y - enemy.maxSpeed;
+//                 let nextMagnitude = Math.hypot(distanceX, nextDistanceY);
+//                 if (nextMagnitude < currentMagnitude) {
+//                     enemy.velocity.y = -enemy.maxSpeed;
+//                 } else {
+//                     this.followPlayer(enemy);
+//                     return;
+//                 }
+//             }
+
+//             if (distanceY > 0) {
+//                 let nextDistanceY = this.player.position.y - enemy.position.y + enemy.maxSpeed;
+//                 let nextMagnitude = Math.hypot(distanceX, nextDistanceY);
+//                 if (nextMagnitude < currentMagnitude) {
+//                     enemy.velocity.y = enemy.maxSpeed;
+//                 } else {
+//                     this.followPlayer(enemy);
+//                     return;
+//                 }
+//             }
+//         }
+
+//         if (enemy.collision.sideTB) {
+//             if (distanceX < 0) {
+//                 let nextDistanceX = this.player.position.x - enemy.position.x - enemy.maxSpeed;
+//                 let nextMagnitude = Math.hypot(nextDistanceX, distanceY);
+//                 if (nextMagnitude < currentMagnitude) {
+//                     enemy.velocity.x = -enemy.maxSpeed;
+//                 } else {
+//                     this.followPlayer(enemy);
+//                     return;
+//                 }
+//             }
+
+//             if (distanceX > 0) {
+//                 let nextDistanceX = this.player.position.x - enemy.position.x + enemy.maxSpeed;
+//                 let nextMagnitude = Math.hypot(nextDistanceX, distanceY);
+//                 if (nextMagnitude < currentMagnitude) {
+//                     enemy.velocity.x = enemy.maxSpeed;
+//                 } else {
+//                     this.followPlayer(enemy);
+//                     return;
+//                 }
+//             }
+//         }
+//     } else {
+//         this.followPlayer(enemy);
+//     }
+// }
