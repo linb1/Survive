@@ -2,8 +2,6 @@ export default class Map {
     constructor() {
         this.tileSize = 32;
         this.wall = this.loadImage("stone.png");
-        this.ice_floor = this.loadImage("ice.png");
-        this.grass_floor = this.loadImage("grass.png");
         this.floor = this.loadImage("floor.png")
     }
 
@@ -12,7 +10,7 @@ export default class Map {
         img.src = `src/images/${fileName}`;
         return img;
     }
-    
+
     //tile 32x32px
     // 1 = wall
     // 0 = empty space

@@ -5,10 +5,71 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./dist/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="./dist/main.js"></script>
     <title>Survive!</title>
 </head>
 <body>
-    <canvas id="game" width="864" height="576"></canvas>
+    
+    <div class="title">
+        <div class="animate">
+            <h1>SURVIVE!</h1>
+        </div>
+    </div>
+    <div class="main-wrapper">
+        <div class="controls">
+            <h2>Controls</h2>
+            <div class="keyboard-input">
+                <img src="src/images/arrowup.png" width="50" height="50"/>
+                <span>MOVE UP</span>
+            </div>
+            <div class="keyboard-input">
+                <img src="src/images/arrowdown.png" width="50" height="50" />
+                <span>MOVE DOWN</span>
+            </div>
+            <div class="keyboard-input">
+                <img src="src/images/arrowleft.png" width="50" height="50" />
+                <span>MOVE LEFT</span>
+            </div>
+            <div class="keyboard-input">
+                <img src="src/images/arrowright.png" width="50" height="50" />
+                <span>MOVE RIGHT</span>
+            </div>
+            <div class="keyboard-input">
+                <img src="src/images/spacebar.png" width="100" height="50" />
+                <span>SHOOT</span>
+            </div>
+            <div class="keyboard-input">
+                <img src="src/images/p.png" width="50" height="50" />
+                <span>PAUSE</span>
+            </div>
+
+        </div>
+    
+        <canvas id="game" width="864" height="576"></canvas>
+    
+        <div class="instructions">
+            <span>Instructions</span>
+            <p>
+                After being on the run from monsters for days, you've run into a 
+                dead end. With the your remaining energy, destroy as many skeletons
+                as you can! Will you be overwhlemed, or will you survive?
+            </p>
+            <br/>
+            <p>
+                After every 10 skeletons you destroy, the new ones will get stronger.
+                Once you run out of health, its game over!
+            </p>
+        </div>
+    </div>
+
+    <div class="nav-links">
+        <a href="https://github.com/linb1"> <img src="src/images/github.png" width="50" height="50"/> </a>
+        <a href="https://www.linkedin.com/in/brian-lin-1590/"> <img src="src/images/linkedin.png" width="50" height="50"/> </a>
+        
+        
+    </div>
 </body>
 </html>

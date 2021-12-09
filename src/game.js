@@ -542,6 +542,7 @@ export default class Game {
             ctx.textAlign = "center";
             ctx.fillText(`Score: ${this.player.score}`, 100, 25);
             ctx.fillText(`Health: ${this.player.health}`, this.gameWidth - 100, 25);
+            ctx.fillText(`Difficulty: ${this.difficulty}`, 100, this.gameHeight - 5);
         }
 
         if (this.gameState === GAMESTATE.MENU) {

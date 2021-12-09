@@ -1,3 +1,158 @@
+body {
+    background-image: url("../src/images/background.png");
+    background-size: cover;
+}
+
+
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // border: 3px solid red;
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    font-size: 64px;
+    padding: 15px;
+    // text-shadow: 3px 3px rgba(255, 255, 255, 0.555);
+    text-shadow: 4px 4px black;
+}
+
+.animate {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+
+    h1:before, h1:after{
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        z-index: 1;
+    }
+
+    h1:before{
+        background-color: white;
+        animation: showText 1s ease;
+    }
+
+    h1:after{
+        background-color: black;
+        animation: showText .8s ease;
+    }
+
+    h1 {
+        opacity: 0;
+        animation: animateText 3s forwards;
+    }
+}
+
+@keyframes animateText{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes showText{
+    0% {
+        width: 0;
+        left: 0;
+    }
+    50% {
+        width: 100%;
+        left: 0;
+    }
+    100% {
+        width: 0;
+        left: 100%;
+    }
+}
+
+.main-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    // border: 3px solid green;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 10px;
+    border: 10px inset rgba(17, 14, 14, 0.555);
+    width: 200px;
+    padding: 10px;
+    background-image: url("../src/images/brick.png");
+    background-size: 250px;
+    font-size: 18px;
+    color: black;
+    -webkit-text-stroke:1px rgb(88, 71, 71);
+    h2 {
+        font-size: 24px;
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+        // padding-left: 35px;
+        // border: 1px solid red;
+        justify-content: center;
+    }
+}
+.keyboard-input {
+    // border: 3px solid red;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 85%;
+}
+
 #game {
-    border: 1px solid black;
+    border: 10px ridge rgb(165, 65, 65);
+}
+
+.instructions {
+    width: 200px;
+    // border: 3px solid purple;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-image: url("../src/images/wood.png");
+    background-size: 250px;
+    border: 10px inset rgba(17, 14, 14, 0.555);
+    span {
+        // border: 3px solid red;
+        margin-bottom: 20px;
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+    }
+
+    p {
+        text-align: left;
+        font-size: 16px;
+        // border: 3px solid green;
+    }
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // border: 3px solid cyan;
+    padding: 10px;
+    gap: 20px;
+    img {
+        filter: invert(70%);
+    }
+
+    img:hover {
+        filter: invert(100%);
+    }
 }
