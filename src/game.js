@@ -21,6 +21,7 @@ export default class Game {
         this.gameState = GAMESTATE.MENU;
         this.difficulty = 1;
         this.enemyID = 0;
+        this.highScore = 0;
     }
 
     start() {
@@ -34,6 +35,7 @@ export default class Game {
         this.player = new Player(this);
         this.projectiles = [];
         this.enemies = [];
+        this.difficulty = 1;
         // this.spawnEnemies();
     }
 
@@ -63,7 +65,7 @@ export default class Game {
                 this.enemies.push(new Enemy(spawnPosition, { x: 0, y: 0 }, this.difficulty, this.enemyID))
                 this.enemyID++;
             }
-        }, 1000);
+        }, 1500);
     }
 
     spawnEnemiesBottom(){
@@ -80,7 +82,7 @@ export default class Game {
                 this.enemies.push(new Enemy(spawnPosition, { x: 0, y: 0 }, this.difficulty, this.enemyID))
                 this.enemyID++;
             }
-        }, 3000);
+        }, 1500);
     }
 
     spawnEnemies(){
@@ -154,6 +156,7 @@ export default class Game {
                         enemy.delete = true;
                         this.defeatEnemy();
                         this.player.score++;
+                        this.setHighScore();
                         this.increaseDifficulty();
                     }
                     projectile.delete = true;
@@ -175,6 +178,12 @@ export default class Game {
     increaseDifficulty(){ // goal: increase health after x amount of kills
         if ((this.player.score % 10 == 0) && (this.player.score !== 0)){
             this.difficulty += 1;
+        }
+    }
+
+    setHighScore(){
+        if (this.player.score > this.highScore){
+            this.highScore = this.player.score;
         }
     }
 
@@ -543,6 +552,7 @@ export default class Game {
             ctx.fillText(`Score: ${this.player.score}`, 100, 25);
             ctx.fillText(`Health: ${this.player.health}`, this.gameWidth - 100, 25);
             ctx.fillText(`Difficulty: ${this.difficulty}`, 100, this.gameHeight - 5);
+            ctx.fillText(`High Score: ${this.highScore}`, this.gameWidth - 100, this.gameHeight - 5);
         }
 
         if (this.gameState === GAMESTATE.MENU) {
