@@ -1,8 +1,8 @@
 # Survive!
 
-![gameplay](https://user-images.githubusercontent.com/68402088/145424298-fcc162e1-85ff-42f0-af3e-1ea40920e217.gif)
+[Survive!](https://linb1.github.io/Survive/) is a 2D arcade game.
 
-Survive! is a 2D survival game.
+![gameplay](https://user-images.githubusercontent.com/68402088/145424298-fcc162e1-85ff-42f0-af3e-1ea40920e217.gif)
 
 Stuck in a room with no where else to go, defend against waves of enemies 
 for as long as you can! The longer you live, the stronger your enemies get, so don't
