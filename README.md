@@ -8,6 +8,8 @@ Stuck in a room with no where else to go, defend against waves of enemies
 for as long as you can! The longer you live, the stronger your enemies get, so don't
 let them catch you!
 
+Use the arrow keys to move, spacebar to shoot, and press "P" to pause.
+
 ## Functionality and MVPs
 
 In Survive!, players will:
@@ -104,3 +106,8 @@ entering the collision boundary before stopping the object. This is applied to a
 - Background music
 - Additional game features: upgrading weapons, unique enemies
 - Different levels/waves as game goes on
+
+## Todo's/Future
+- Add any additional bonus/new game features
+- Improve previous game feature (i.e smarter enemy AI, better map)
+- Refactor and organize code to improve readability and reuseability
