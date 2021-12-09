@@ -456,7 +456,8 @@ export default class Game {
             ctx.font = "30px Arial";
             ctx.fillStyle = "white";
             ctx.textAlign = "center";
-            ctx.fillText("GAME OVER", this.gameWidth / 2, this.gameHeight / 2);
+            ctx.fillText("GAME OVER", this.gameWidth / 2, (this.gameHeight / 2) - 50);
+            ctx.fillText(`SCORE: ${this.player.score}`, this.gameWidth / 2, this.gameHeight / 2);
             ctx.fillText("Press ENTER to Play Again", this.gameWidth / 2, (this.gameHeight/2)+50);
         }
     }
