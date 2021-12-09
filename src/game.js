@@ -55,7 +55,7 @@ export default class Game {
             if (this.gameState === GAMESTATE.GAMEOVER) return;
             let max = (this.gameWidth/2) + 75;
             let min = (this.gameWidth / 2) - 75;
-            for(let i = 0; i < 2; i++){
+            for(let i = 0; i < 1; i++){
                 let spawnX = Math.random() * (max-min) + min;
                 let spawnY = 0;
                 let spawnPosition = { x: spawnX, y: spawnY }
@@ -72,7 +72,7 @@ export default class Game {
             if (this.gameState === GAMESTATE.GAMEOVER) return;
             let max = (this.gameWidth / 2) + 75;
             let min = (this.gameWidth / 2) - 75;
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 1; i++) {
                 let spawnX = Math.random() * (max - min) + min;
                 let spawnY = this.gameHeight;
                 let spawnPosition = { x: spawnX, y: spawnY }
@@ -530,6 +530,18 @@ export default class Game {
             ctx.fillStyle = "white";
             ctx.textAlign = "center";
             ctx.fillText("Paused", this.gameWidth/2, this.gameHeight/2);
+        }
+
+        if (this.gameState === GAMESTATE.RUNNING) {
+            // ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+            // ctx.fillStyle = "rgba(0,0,0,0.5)"
+            // ctx.fill();
+
+            ctx.font = "24px Arial";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText(`Score: ${this.player.score}`, 100, 25);
+            ctx.fillText(`Health: ${this.player.health}`, this.gameWidth - 100, 25);
         }
 
         if (this.gameState === GAMESTATE.MENU) {
