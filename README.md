@@ -19,7 +19,7 @@ In Survive!, players will:
 The enemies will:
 - Follow the player until they are destroyed
 - Gain more health and damage as the game goes on
-- Spawn in larger numbers each wave
+- Continue to spawn until the game is over
 
 In addition, this project will include:
 - Instructions describing the background and rules of the game
@@ -35,6 +35,55 @@ In addition, this project will include:
 - the Options will give the user the ability to mute the game sounds or pause the game
 - the center will contain the game screen, where users can see their score, health, and wave number.
 
+## Code
+```javascript
+    checkForCollision(object){
+        let leftColumn = Math.floor(object.position.x / this.map.tileSize);
+        let bottomRow = Math.floor((object.position.y + object.height)/ this.map.tileSize);
+        let topRow = Math.floor(object.position.y / this.map.tileSize);
+        let rightColumn = Math.floor((object.position.x + object.width) / this.map.tileSize);
+
+        if (this.map.collisionMap[bottomRow][leftColumn] != 0){
+            this.collision(this.map.collisionMap[bottomRow][leftColumn], object, bottomRow, leftColumn);
+        }
+        if (this.map.collisionMap[topRow][leftColumn] != 0) {
+            this.collision(this.map.collisionMap[topRow][leftColumn], object, topRow, leftColumn);
+        }
+        if (this.map.collisionMap[bottomRow][rightColumn] != 0) {
+            this.collision(this.map.collisionMap[bottomRow][rightColumn], object, bottomRow, rightColumn);
+        }
+        if (this.map.collisionMap[topRow][rightColumn] != 0) {
+            this.collision(this.map.collisionMap[topRow][rightColumn], object, topRow, rightColumn);
+        }
+    }
+```
+The games revolves around collision detection, which is down by taking a grid of the map and
+checking every corner of each object to see if an object has collided with the terrian.
+
+```javascript
+    leftCollision(object, tile_left){
+        if (object instanceof Projectile) {
+            object.delete = true;
+            this.removeProjectiles()
+        } else {
+            let rightOfobject = object.position.x + object.width;
+            let prevRightOfobject = object.prevPosition.x + object.width;
+            if ((object.position.x - object.prevPosition.x) > 0) {
+                let left = tile_left * this.map.tileSize;
+    
+                if (rightOfobject > left && prevRightOfobject <= left) {
+                    object.prevPosition.x = object.position.x = left - object.width - 0.01;
+                    return true
+                }
+            }
+            return false
+        }
+    }
+```
+The game checks the location of the object on the previous frame and compares it with the
+location of the object at the current frame to determine from which direction the object is
+entering the collision boundary before stopping the object. This is applied to all four directions.
+
 ## Technologies
 - Javascript
 - HTML
@@ -47,10 +96,11 @@ In addition, this project will include:
 - Saturday: Creating classes for board and player, making sure they render on the screen
 - Sunday: Creating projectiles, map, enemies, and implementing collision detection for player/enemies
 - Monday: Create game logic, implement enemy AI to follow player
-- Tuesday: Finish up on useer control, anything game related, and working on styling, such as adding animation and sprites
+- Tuesday: Finish up on user control, anything game related, and working on styling, such as adding animation and sprites
 - Wednesday: Finish styling the game, adding nav links, and any bonus features if possible
 
 
 ## Bonus Features
 - Background music
 - Additional game features: upgrading weapons, unique enemies
+- Different levels/waves as game goes on

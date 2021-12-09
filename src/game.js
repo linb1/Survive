@@ -233,9 +233,6 @@ export default class Game {
         if (this.map.collisionMap[topRow][rightColumn] != 0) {
             this.collision(this.map.collisionMap[topRow][rightColumn], object, topRow, rightColumn);
         }
-
-
-
     }
 
     // 1 = ceiling (bottom collision)
