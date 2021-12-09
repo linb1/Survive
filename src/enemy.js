@@ -5,17 +5,13 @@ export default class Enemy {
         this.width = 30;
         this.height = 32;
         this.imgWidth = this.width*1.1;
-        this.color = "red";
         this.velocity = {x:0, y:0};
         this.maxSpeed = 1;
         this.skeleton = this.loadImage("skeleton.png")
-        this.collision = {
-            sideLR: false,
-            sideTB: false
-        }
         this.health = health;
         this.delete = false;
         this.id = enemyId;
+        this.color = "red"; // for testing
     }
 
     loadImage(fileName) {

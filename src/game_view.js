@@ -24,14 +24,6 @@ export default class GameView{
         requestAnimationFrame(this.animate.bind(this))
     }
 
-    // togglePause(){
-    //     if(this.gameState === GAMESTATE.PAUSED){
-    //         this.gameState = GAMESTATE.RUNNING;
-    //     } else {
-    //         this.gameState = GAMESTATE.PAUSED;
-    //     }
-    // }
-
     animate(timestamp){
         let deltaTime = timestamp - this.lastTime; // deltatime - how much time has pass since last update
         this.lastTime = timestamp; // set lasttime to current time

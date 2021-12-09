@@ -49,7 +49,7 @@ export default class InputHandler{
             // console.log(this.inputs)
 
             let keys = Object.keys(this.inputs).filter(key => this.inputs[key].pressed)
-            console.log(keys)
+            // console.log(keys)
             
             if (keys.includes("ArrowLeft") && keys.includes("ArrowUp")) {
                 game.player.moveLeft();

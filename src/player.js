@@ -15,16 +15,14 @@ export default class Player {
             x: (game.gameWidth / 2) - (this.width / 2),
             y: (game.gameHeight / 2) - (this.height / 2)
         }
-        this.color = "green"; //remove later
         this.velocity = { x:0, y:0 };
         this.maxSpeed = 2;
         this.direction = "faceDown";
-        this.collisionX = false; // not used?
-        this.collisionY = false; // not used?
         this.witch = this.loadImage("witch.png")
         this.score = 0;
         this.health = 2;
         this.invincible = false;
+        this.color = "green"; //for testing
     }
 
     loadImage(fileName) {
@@ -67,7 +65,6 @@ export default class Player {
     }
     moveDiagonalRightDown() {
         this.direction = "faceRightDown"
-        console.log("down-right")
         // this.velocity.x = this.maxSpeed;
         // this.velocity.y = this.maxSpeed;
     }
@@ -83,40 +80,29 @@ export default class Player {
         switch (this.direction) {
             case "faceLeft":
                 return {x: -15, y: 0};
-                break;
             case "faceRight":
                 return { x: 15, y: 0 };
-                break;
             case "faceUp":
                 return { x: 0, y: -15 };
-                break;
             case "faceDown":
                 return { x: 0, y: 15 };
-                break;
             case "faceLeftUp":
                 return { x: -15, y: -15 };
-                break;
             case "faceLeftDown":
                 return { x: -15, y: 15};
-                break;
             case "faceRightUp":
                 return { x: 15, y: -15 };
-                break;
             case "faceRightDown":
                 return { x: 15, y: 15 };
-                break;
         }
     }
 
     shoot() {
-        let x = this.position.x + (this.width/2); //top // get snapshot of player position (passing in this.position makes bullet follow player)
+        let x = this.position.x + (this.width/2); // get snapshot of player position (passing in this.position makes bullet follow player)
         let y = this.position.y + (this.height/2);
 
-        // xy == bottom
         let velocity = this.getProjectileVelocity();
         let projectile = new Projectile({x ,y}, velocity);
-        // project1 = xy
-        //pro 2 =x2y2
         this.game.addProjectile(projectile);
     }
     //draw go to a different class later

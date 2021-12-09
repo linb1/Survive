@@ -3,10 +3,10 @@ export default class Projectile {
         this.position = position;
         this.width = 16;
         this.height = 16;
-        this.color = "black";
         this.velocity =  velocity
         this.image = this.loadImage("fireball.png")
         this.delete = false;
+        this.color = "black"; //for testing
     }
     loadImage(fileName) {
         let img = new Image();
