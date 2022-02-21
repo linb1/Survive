@@ -8,7 +8,7 @@ export default class InputHandler{
             "ArrowUp": {pressed: false, timeStamp: null},
             "ArrowDown": {pressed: false, timeStamp: null},
         };
-        document.addEventListener('keydown', (event) =>{
+        window.addEventListener('keydown', (event) =>{
             if (!this.inputs[event.key]){
                 this.inputs[event.key] = {pressed: false, timeStamp: event.timeStamp};
             }
@@ -16,22 +16,27 @@ export default class InputHandler{
             //log inputs
             switch (event.key){
                 case " ":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = true;
                     this.inputs[event.key].timeStamp = event.timeStamp;
                     break;
                 case "ArrowLeft":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = true;
                     this.inputs[event.key].timeStamp = event.timeStamp;
                     break;
                 case "ArrowRight":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = true;
                     this.inputs[event.key].timeStamp = event.timeStamp;
                     break;
                 case "ArrowUp":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = true;
                     this.inputs[event.key].timeStamp = event.timeStamp;
                     break;
                 case "ArrowDown":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = true;
                     this.inputs[event.key].timeStamp = event.timeStamp;
                     break;
@@ -46,10 +51,9 @@ export default class InputHandler{
                     }
                     break;
             }
-            // console.log(this.inputs)
+
 
             let keys = Object.keys(this.inputs).filter(key => this.inputs[key].pressed)
-            // console.log(keys)
             
             if (keys.includes("ArrowLeft") && keys.includes("ArrowUp")) {
                 game.player.moveLeft();
@@ -103,33 +107,38 @@ export default class InputHandler{
         // stops player when key up
         // if statements - only stops player if they are moving in that current direction to prevent stuttering
         // press down left -> press down right -> let go of left: stops player for a split second
-        document.addEventListener('keyup', (event) => {
+        window.addEventListener('keyup', (event) => {
             switch (event.key) {
                 case "ArrowLeft":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = false;
                     if(game.player.velocity.x < 0){
                         game.player.stopX();
                     }
                     break;
                 case "ArrowRight":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = false;
                     if (game.player.velocity.x > 0) {
                         game.player.stopX();
                     }
                     break;
                 case "ArrowUp":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = false;
                     if(game.player.velocity.y < 0){
                         game.player.stopY();
                     }
                     break;
                 case "ArrowDown":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = false;
                     if(game.player.velocity.y > 0){
                         game.player.stopY();
                     }
                     break;
                 case " ":
+                    event.preventDefault();
                     this.inputs[event.key].pressed = false;
                     break;
             }
